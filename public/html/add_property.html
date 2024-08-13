@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="/css/admin.css">
+  <link rel="stylesheet" href="/css/add_property.css">
+  <link rel="stylesheet" href="../../fontawesome-free-6.6.0-web/css/all.min.css">
+  <link rel="icon" href="path/to/your/favicon.ico">
+    <title>Add Property</title>
+</head>
+<body>
+  <div class="container">
+    <div class="sidebar">
+      <div class="logo">
+        <h2>Admin Menu</h2>
+      </div>
+      <ul class="menu">
+        <li><a href="index.html"><i class="fas fa-home"></i> Home</a></li>
+        <li><a href="add_property.html"><i class="fas fa-plus"></i> Add Property</a></li>
+        <li><a href="edit_property.html"><i class="fas fa-edit"></i> Edit Property</a></li>
+        <li><a href="rented_properties.html"><i class="fas fa-home"></i> Rented Properties</a></li>
+      </ul>
+    </div>
+    <div class="main-content">
+      <header>
+        <h1>Add Property</h1>
+      </header>
+      <section class="content-section">
+        <h2>Add Property</h2>
+        <form id="uploadForm" enctype="multipart/form-data">
+            <div class="form-group">
+              <input type="text" id="title" name="title" placeholder="Title" required>
+            </div>
+            <div class="form-group">
+              <input type="date" id="availableDate" name="availableDate" placeholder="Available date" required>
+            </div>
+            <div class="form-group row">
+              <input type="text" id="rooms" name="rooms" placeholder="Rooms" required>
+              <input type="text" id="bathrooms" name="bathrooms" placeholder="Bathrooms" required>
+            </div>
+            <div class="form-group">
+              <select id="location" name="location" required>
+                <option value="" disabled selected>Select Location</option>
+                <option value="SS13">SS13</option>
+                <option value="SS15">SS15</option>
+                <option value="CasaTiara">CasaTiara</option>
+                <option value="IconCity">IconCity</option>
+                <option value="Greenfield">Greenfield</option>
+                <option value="GeoSense">GeoSense</option>
+                <option value="GeoLake">GeoLake</option>
+                <option value="Union">Union</option>
+                <option value="Edumetro">Edumetro</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <input type="text" id="name" name="name" placeholder="Name" required>
+            </div>
+            <div class="form-group">
+              <input type="number" id="price" name="price" placeholder="Price" required>
+            </div>
+            <div class="form-group">
+              <input type="text" id="tags" name="tags" placeholder="Tags" required>
+            </div>
+            <div class="form-group">
+              <input type="text" id="description" name="description" placeholder="Description" required>
+            </div>
+            <div class="form-group">
+              <input type="file" id="images" name="images" accept="image/*" multiple>
+              <div id="imagePreviewContainer" class="image-preview-container"></div>
+              <div id="bufferingIndicator" style="display:none;">Buffering images, please wait...</div>
+            </div>
+            <div class="form-group">
+              <select id="sources" name="sources" required>
+                <option value="" disabled selected>Sources From</option>
+                <option value="andy">Andy</option>
+                <option value="shally">Shally Lee</option>
+                <option value="patience">Patience</option>
+                <option value="desmond">Desmond</option>
+                <option value="siang">Ah Siang</option>
+                <option value="ownself">Self</option>
+              </select>
+            </div>
+
+            <button id="uploadButton" type="submit" disabled>Upload</button>
+          </form>
+      </section>
+    </div>
+  </div>
+  <script src="/js/admin.js"></script>
+  <script src="/js/add_property.js"></script>
+</body>
+</html>

@@ -1,0 +1,113 @@
+/* public/css/add_property.css */
+
+form {
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    background-color: white;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+  
+  .form-group {
+    margin-bottom: 15px;
+  }
+  
+  form input,
+  form textarea,
+  form select {
+    width: 100%;
+    padding: 10px;
+    margin: 10px 0;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+    font-size: 16px;
+  }
+  
+  form select {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    background-color: #fff;
+    background-image: url('data:image/svg+xml;utf8,<svg fill="%23333" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M7 10l5 5 5-5z"/></svg>');
+    background-repeat: no-repeat;
+    background-position: right 10px center;
+  }
+  
+  .row {
+    display: flex;
+    gap: 10px; /* Adjust the gap between columns as needed */
+  }
+  
+  .row input[type="text"],
+  .row input[type="number"] {
+    flex: 1; /* Each input will take up equal space */
+  }
+  
+  form button {
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    cursor: pointer;
+    border-radius: 4px;
+    width: 100%;
+    font-size: 16px;
+    transition: background-color 0.3s;
+  }
+  
+  form button:hover {
+    background-color: #45a049;
+  }
+  
+  #uploadButton:disabled {
+    background-color: grey;
+    cursor: not-allowed;
+  }
+  
+  .image-preview-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+  
+  .image-preview-container img {
+    width: 100px;
+    height: 100px;
+    object-fit: cover;
+    border: 1px solid #ccc;
+    padding: 5px;
+    border-radius: 5px;
+  }
+  
+  .image-preview {
+    position:relative;
+    display:inline-block;
+  }
+  
+  .image-preview img {
+    max-width:150px;
+    height:auto;
+    display:block;
+  }
+  
+  .image-preview .remove-icon {
+    position:absolute;
+    top:5px;
+    right:5px;
+    background-color:transparent;
+    border:none;
+    cursor:pointer;
+  }
+  
+  .image-preview .remove-icon img {
+    width:24px;
+    height:24px;
+  }
+  
+  .image-preview.dragging {
+    opacity:0.5;
+  }
+  

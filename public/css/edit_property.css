@@ -1,0 +1,279 @@
+/* General Styles */
+body, html {
+  margin: 0;
+  padding: 0;
+  font-family: Arial, sans-serif;
+  box-sizing: border-box;
+}
+
+/* Container Styles */
+.container {
+  display: flex;
+}
+
+.sidebar {
+  width: 200px;
+  background-color: #343a40;
+  color: #fff;
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+.sidebar .logo {
+  text-align: center;
+}
+
+.sidebar .menu {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.sidebar .menu li {
+  margin: 15px 0;
+}
+
+.sidebar .menu li a {
+  color: #fff;
+  text-decoration: none;
+  font-size: 16px;
+}
+
+.sidebar .menu li a:hover {
+  text-decoration: underline;
+}
+
+.main-content {
+  flex: 1;
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+.header {
+  margin-bottom: 20px;
+}
+
+.content-section {
+  margin-top: 20px;
+}
+
+.content-section h1 {
+  margin-bottom: 20px;
+}
+
+/* Table Styles */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+}
+
+table thead {
+  background-color: #f8f8f8;
+}
+
+table th, table td {
+  text-align: left;
+  padding: 12px;
+  border-bottom: 1px solid #ddd;
+}
+
+table th {
+  background-color: #f2f2f2;
+  font-weight: bold;
+}
+
+table tr:hover {
+  background-color: #f1f1f1;
+}
+
+tr.rented {
+  background-color: #f8d7da; /* Light red color */
+}
+
+/* Background color for available properties */
+tr.available {
+  background-color: #d4edda; /* Light green color */
+}
+
+/* Actions Column Styles */
+.actions {
+  display: flex;
+  align-items: center;
+}
+
+.actions .edit-button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #007bff;
+  padding: 8px;
+}
+
+.actions .fa-solid {
+  font-size: 20px;
+  color: inherit;
+}
+
+.actions .edit-button:hover .fa-solid {
+  color: #0056b3;
+}
+
+.actions .switch {
+  position: relative;
+  display: inline-block;
+  width: 34px;
+  height: 20px;
+}
+
+.actions .switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.actions .slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc;
+  transition: 0.4s;
+  border-radius: 34px;
+}
+
+.actions .slider:before {
+  position: absolute;
+  content: "";
+  height: 12px;
+  width: 12px;
+  left: 4px;
+  bottom: 4px;
+  background-color: white;
+  transition: 0.4s;
+  border-radius: 50%;
+}
+
+.actions input:checked + .slider {
+  background-color: #2196F3;
+}
+
+.actions input:checked + .slider:before {
+  transform: translateX(14px);
+}
+
+/* Modal Styles */
+.modal {
+  display: none;
+  position: fixed;
+  z-index: 1000;
+  padding-top: 20px;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  background-color: rgba(0, 0, 0, 0.4);
+}
+
+.modal-content {
+  background-color: #fefefe;
+  margin: auto;
+  padding: 20px;
+  border: 1px solid #888;
+  width: 80%;
+  max-width: 600px;
+  border-radius: 8px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+  position: relative;
+  z-index: 1001;
+}
+
+.close-button {
+  color: #aaa;
+  float: right;
+  font-size: 28px;
+  font-weight: bold;
+  cursor: pointer;
+  z-index: 1050;
+  position: relative;
+}
+
+.close-button:hover,
+.close-button:focus {
+  color: black;
+  text-decoration: none;
+}
+
+
+/* Simplified Form Styles */
+#editForm .form-group {
+  margin-bottom: 15px;
+}
+
+#editForm .form-group label {
+  display: block;
+  margin-bottom: 5px;
+  color: #333;
+}
+
+#editForm .form-group input,
+#editForm .form-group textarea,
+#editForm .form-group select {
+  width: 100%;
+  padding: 10px;
+  box-sizing: border-box;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  outline: none;
+  font-size: 16px;
+}
+
+#editForm .form-group.row {
+  display: flex;
+  gap: 20px;
+}
+
+#editForm .form-group.row .form-group {
+  flex: 1;
+}
+
+#editForm button {
+  background-color: #28a745;
+  color: #fff;
+  border: none;
+  padding: 10px 15px;
+  border-radius: 4px;
+  cursor: pointer;
+  margin-right: 10px;
+}
+
+#editForm button#deleteButton {
+  background-color: #dc3545;
+}
+
+#editForm button:hover {
+  background-color: #218838;
+}
+
+#editForm button#deleteButton:hover {
+  background-color: #c82333;
+}
+
+/* Image Preview Styles */
+#imagePreview {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+#imagePreview img {
+  width: 100px;
+  height: 100px;
+  object-fit: cover;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}

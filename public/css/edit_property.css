@@ -11,38 +11,6 @@ body, html {
   display: flex;
 }
 
-.sidebar {
-  width: 200px;
-  background-color: #343a40;
-  color: #fff;
-  padding: 20px;
-  box-sizing: border-box;
-}
-
-.sidebar .logo {
-  text-align: center;
-}
-
-.sidebar .menu {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-}
-
-.sidebar .menu li {
-  margin: 15px 0;
-}
-
-.sidebar .menu li a {
-  color: #fff;
-  text-decoration: none;
-  font-size: 16px;
-}
-
-.sidebar .menu li a:hover {
-  text-decoration: underline;
-}
-
 .main-content {
   flex: 1;
   padding: 20px;

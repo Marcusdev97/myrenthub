@@ -16,6 +16,7 @@ document.addEventListener('DOMContentLoaded', () => {
           <td>${property.title}</td>
           <td>${property.name}</td>
           <td>${property.tags}</td>
+          <td>${property.sources}</td>
           <td class="actions">
             <button class="edit-button" data-id="${property.id}">
               <i class="fa-solid fa-pen-to-square"></i>
@@ -58,6 +59,7 @@ document.addEventListener('DOMContentLoaded', () => {
     try {
       const response = await fetch(`/api/properties/${id}`);
       const property = await response.json();
+      console.log(property);
       if (!property) throw new Error('Property not found');
 
       document.getElementById('propertyId').value = property.id;
@@ -69,6 +71,7 @@ document.addEventListener('DOMContentLoaded', () => {
       document.getElementById('name').value = property.name;
       document.getElementById('price').value = property.price;
       document.getElementById('tags').value = property.tags;
+      document.getElementById('sources').value = property.sources;
       document.getElementById('description').value = property.description;
 
       const imagePreview = document.getElementById('imagePreview');
@@ -150,6 +153,8 @@ document.addEventListener('DOMContentLoaded', () => {
       imagePreview.forEach(img => images.push(img.src));
       formData.append('existingImages', JSON.stringify(images));
     }
+
+    console.log(formData);
 
     try {
       const response = await fetch(`/api/properties/${id}`, {

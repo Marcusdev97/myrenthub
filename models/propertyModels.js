@@ -24,7 +24,7 @@ const PropertyModel = {
   },
 
   update: async function(id, updatedProperty) {
-    const { title, availableDate, rooms, bathrooms, location, name, price, tags, description, images, rented } = updatedProperty;
+    const { title, availableDate, rooms, bathrooms, location, name, price, tags, description, images, rented, sources } = updatedProperty;
     const sql = `
       UPDATE properties SET 
       title = ?, availableDate = ?, rooms = ?, bathrooms = ?, location = ?, 

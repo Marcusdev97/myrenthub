@@ -18,7 +18,7 @@
         <li><a href="index.html"><i class="fas fa-home"></i> Home</a></li>
         <li><a href="add_property.html"><i class="fas fa-plus"></i> Add Property</a></li>
         <li><a href="edit_property.html"><i class="fas fa-edit"></i> Edit Property</a></li>
-        <li><a href="rented_properties.html"><i class="fas fa-home"></i> Rented Properties</a></li>
+        <li><a href="my_rented_properties_list.html"><i class="fas fa-home"></i> Rented Properties</a></li>
       </ul>
     </div>
     <div class="main-content">
@@ -70,17 +70,11 @@
               <div id="bufferingIndicator" style="display:none;">Buffering images, please wait...</div>
             </div>
             <div class="form-group">
+              <label for="sources">Sources From</label>
               <select id="sources" name="sources" required>
-                <option value="" disabled selected>Sources From</option>
-                <option value="andy">Andy</option>
-                <option value="shally">Shally Lee</option>
-                <option value="patience">Patience</option>
-                <option value="desmond">Desmond</option>
-                <option value="siang">Ah Siang</option>
-                <option value="ownself">Self</option>
+                  <option value="" disabled selected>Select Source</option>
               </select>
-            </div>
-
+          </div>          
             <button id="uploadButton" type="submit" disabled>Upload</button>
           </form>
       </section>

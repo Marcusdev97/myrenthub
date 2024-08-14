@@ -30,7 +30,6 @@ exports.getPropertyById = async (req, res) => {
     }
 };
 
-
 // Create a new property
 exports.createProperty = async (req, res) => {
     const { title, availableDate, rooms, bathrooms, location, name, price, tags, description, sources } = req.body;
@@ -98,7 +97,6 @@ exports.updateProperty = async (req, res) => {
     }
 };
 
-
 // Delete a property
 exports.deleteProperty = async (req, res) => {
     const { id } = req.params;
@@ -113,5 +111,27 @@ exports.deleteProperty = async (req, res) => {
     } catch (error) {
         console.error('Error deleting property:', error);
         res.status(500).send({ error: 'Internal Server Error', details: error.message });
+    }
+};
+
+// Fetch all agents
+exports.getAllAgents = async (req, res) => {
+    try {
+        const [results] = await db.query('SELECT * FROM agents');
+        res.json(results);
+    } catch (error) {
+        console.error('Error fetching agents:', error);
+        res.status(500).json({ error: 'Internal Server Error', details: error.message });
+    }
+};
+
+// Fetch all partners
+exports.getAllPartners = async (req, res) => {
+    try {
+        const [results] = await db.query('SELECT * FROM partners');
+        res.json(results);
+    } catch (error) {
+        console.error('Error fetching partners:', error);
+        res.status(500).json({ error: 'Internal Server Error', details: error.message });
     }
 };

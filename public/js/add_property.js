@@ -1,11 +1,27 @@
 // public/js/add_property.js
 
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', async () => {
+    const sourcesSelect = document.getElementById('sources');
     const uploadForm = document.getElementById('uploadForm');
     const imagePreviewContainer = document.getElementById('imagePreviewContainer');
     const bufferingIndicator = document.getElementById('bufferingIndicator');
     const uploadButton = document.getElementById('uploadButton');
     const requiredInputs = uploadForm ? Array.from(uploadForm.querySelectorAll('input[required], select[required]')) : [];
+
+    try {
+        // Fetch partners
+        const partnersResponse = await fetch('/api/partners');
+        const partners = await partnersResponse.json();
+        console.log(partners);
+        partners.forEach(partner => {
+            const option = document.createElement('option');
+            option.value = `Partner: ${partner.name}`;
+            option.text = `${partner.name} - ${partner.company}`;
+            sourcesSelect.add(option);
+        });
+    } catch (error) {
+        console.error('Error fetching sources:', error);
+    }
 
     // Enable the upload button if all required inputs are filled
     if (requiredInputs) {

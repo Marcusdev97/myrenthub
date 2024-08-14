@@ -16,12 +16,22 @@ const storage = multer.diskStorage({
 
 const upload = multer({ storage: storage });
 
-// Define the routes
+// Get the properties
 router.get('/', propertyController.getAllProperties);
 router.get('/:id', propertyController.getPropertyById);
+
+// Get the agents and partners
+router.get('/agents', propertyController.getAllAgents);
+router.get('/partners', propertyController.getAllPartners);
+
+// Post the image & properties
 router.post('/upload', upload.array('images', 10), propertyController.createProperty);
 router.patch('/:id', upload.array('images', 10), propertyController.updateProperty);
 router.patch('/:id', propertyController.updateProperty);
+
+// Delete the property
 router.delete('/:id', propertyController.deleteProperty);
+
+
 
 module.exports = router;

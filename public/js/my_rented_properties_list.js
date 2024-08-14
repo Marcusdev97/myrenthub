@@ -1,0 +1,1 @@
+// my_rented_properties_list json

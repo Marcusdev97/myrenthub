@@ -96,21 +96,20 @@
               <div class="form-group">
                 <label for="sources">Sources From</label>
                 <select id="sources" name="sources" required>
-                  <option value="" disabled selected>Sources From</option>
-                  <option value="andy">Andy</option>
-                  <option value="shally">Shally Lee</option>
-                  <option value="patience">Patience</option>
-                  <option value="desmond">Desmond</option>
-                  <option value="siang">Ah Siang</option>
-                  <option value="ownself">Self</option>
-                </select>
-              </div>
-              
+                    <option value="" disabled selected>Source From</option>
+                </select>`
+              </div>  
               <div class="form-group">
                 <label for="images">Images</label>
                 <input type="file" id="images" name="images" multiple>
                 <div id="imagePreview"></div>
               </div>
+              <div class="form-group">
+                <label for="agent">Agent Handle</label>
+                <select id="agent" name="agent" required>
+                    <option value="" disabled selected>Agent Handle</option>
+                </select>`
+              </div>  
               <button type="submit" id="saveButton">Save</button>
               <button type="button" id="deleteButton">Delete</button>
             </form>

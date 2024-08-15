@@ -1,4 +1,40 @@
 document.addEventListener('DOMContentLoaded', () => {
+  const sourcesSelect = document.getElementById('sources');
+  const sourcesList = async () => {
+      try {
+        // Fetch partners
+        const partnersResponse = await fetch('/api/partners');
+        const partners = await partnersResponse.json();
+        console.log(partners);
+        partners.forEach(partner => {
+            const option = document.createElement('option');
+            option.value = `Partner: ${partner.name}`;
+            option.text = `${partner.name} - ${partner.company}`;
+            sourcesSelect.add(option);
+        });
+    } catch (error) {
+        console.error('Error fetching sources:', error);
+    }
+  }
+
+  const agentSelect = document.getElementById('agent');
+  const agentList = async () => {
+    try {
+    // Fetch agents
+      const agentsResponse = await fetch('/api/agents');
+      const agents = await agentsResponse.json();
+      console.log(agents);
+      agents.forEach(agent => {
+        const option = document.createElement('option');
+        option.value = `Agent: ${agent.name}`;
+        option.text = `${agent.name}`;
+        agentSelect.add(option);
+      })
+    } catch (error) {
+      console.error('Error fetching agents', error);
+    }
+  }
+
   const loadProperties = async () => {
     try {
       const response = await fetch('/api/properties');
@@ -28,6 +64,8 @@ document.addEventListener('DOMContentLoaded', () => {
           </td>
         `;
         propertyList.appendChild(tr);
+        sourcesList();
+        agentList();
       });
     } catch (error) {
       console.error('Failed to load properties:', error);
@@ -53,7 +91,6 @@ document.addEventListener('DOMContentLoaded', () => {
         alert('An error occurred while updating the property status.');
     }
 };
-
 
   const openEditModal = async (id) => {
     try {

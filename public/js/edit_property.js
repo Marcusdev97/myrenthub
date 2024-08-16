@@ -47,12 +47,14 @@ document.addEventListener('DOMContentLoaded', () => {
       properties.forEach(property => {
         const tr = document.createElement('tr');
         tr.classList.add(property.rented ? 'rented' : 'available');
+        // Display partner name and company in the sources column
+        const sourcesText = property.sources && property.sources.name && property.sources.company ? `${property.sources.name} - ${property.sources.company}` : 'Partner: undefined - undefined';
         tr.innerHTML = `
           <td>${property.id}</td>
           <td>${property.title}</td>
           <td>${property.name}</td>
           <td>${property.tags}</td>
-          <td>${property.sources}</td>
+          <td>${sourcesText}</td>
           <td class="actions">
             <button class="edit-button" data-id="${property.id}">
               <i class="fa-solid fa-pen-to-square"></i>
@@ -92,11 +94,10 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 };
 
-  const openEditModal = async (id) => {
-    try {
+const openEditModal = async (id) => {
+  try {
       const response = await fetch(`/api/properties/${id}`);
       const property = await response.json();
-      console.log(property);
       if (!property) throw new Error('Property not found');
 
       document.getElementById('propertyId').value = property.id;
@@ -108,37 +109,43 @@ document.addEventListener('DOMContentLoaded', () => {
       document.getElementById('name').value = property.name;
       document.getElementById('price').value = property.price;
       document.getElementById('tags').value = property.tags;
-      document.getElementById('sources').value = property.sources;
       document.getElementById('description').value = property.description;
+
+      // Populate and select the correct partner in the sources dropdown
+      const sourcesSelect = document.getElementById('sources');
+      sourcesSelect.innerHTML = ''; // Clear existing options
+      const partnersResponse = await fetch('/api/partners');
+      const partners = await partnersResponse.json();
+
+      partners.forEach(partner => {
+          const option = document.createElement('option');
+          option.value = partner.partner_id;
+          option.text = `${partner.name} - ${partner.company}`;
+          sourcesSelect.add(option);
+      });
+
+      if (property.sources && property.sources.partner_id) {
+          sourcesSelect.value = property.sources.partner_id; // Select the partner in the dropdown
+      }
 
       const imagePreview = document.getElementById('imagePreview');
       imagePreview.innerHTML = '';
 
-      if (typeof property.images === 'string') {
-        try {
-          property.images = JSON.parse(property.images);
-        } catch (e) {
-          console.warn('Failed to parse images:', e);
-        }
-      }
-
       if (Array.isArray(property.images) && property.images.length > 0) {
-        property.images.forEach(imageUrl => {
-          const img = document.createElement('img');
-          img.src = imageUrl;
-          img.alt = 'Property Image';
-          imagePreview.appendChild(img);
-        });
-      } else {
-        console.warn('No images available or images is not an array');
+          property.images.forEach(imageUrl => {
+              const img = document.createElement('img');
+              img.src = imageUrl;
+              img.alt = 'Property Image';
+              imagePreview.appendChild(img);
+          });
       }
 
       const editModal = document.getElementById('editModal');
       editModal.style.display = 'block';
-    } catch (error) {
+  } catch (error) {
       console.error('Failed to open edit modal:', error);
-    }
-  };
+  }
+};
 
   const closeModal = () => {
     console.log('Close button clicked');

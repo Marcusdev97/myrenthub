@@ -7,6 +7,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     const bufferingIndicator = document.getElementById('bufferingIndicator');
     const uploadButton = document.getElementById('uploadButton');
     const requiredInputs = uploadForm ? Array.from(uploadForm.querySelectorAll('input[required], select[required]')) : [];
+    let partnersData = []; // To store fetched partners
 
     try {
         // Fetch partners
@@ -15,7 +16,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         console.log(partners);
         partners.forEach(partner => {
             const option = document.createElement('option');
-            option.value = `Partner: ${partner.name}`;
+            option.value = partner.partner_id; // Store only the ID in the value
             option.text = `${partner.name} - ${partner.company}`;
             sourcesSelect.add(option);
         });
@@ -60,15 +61,20 @@ document.addEventListener('DOMContentLoaded', async () => {
             bufferingIndicator.style.display = 'block';
 
             const formData = new FormData(uploadForm);
+            const selectedPartnerId = sourcesSelect.value;
+            const selectedPartner = partnersData.find(partner => partner.partner_id == selectedPartnerId);
+            
+            if (selectedPartner) {
+                formData.append('sources', JSON.stringify(selectedPartner)); // Store full partner object
+            }
 
             try {
-                const response = await fetch('/api/properties/upload', {  // Updated endpoint
+                const response = await fetch('/api/properties/upload', {
                     method: 'POST',
                     body: formData
                 });
 
                 bufferingIndicator.style.display = 'none';
-                console.log(response);
 
                 if (response.ok) {
                     alert('Property uploaded successfully!');
@@ -77,7 +83,6 @@ document.addEventListener('DOMContentLoaded', async () => {
                     uploadButton.disabled = true;
                 } else {
                     const errorText = await response.text();
-                    console.log(errorText);
                     alert(`Failed to upload property: ${errorText}`);
                 }
             } catch (error) {

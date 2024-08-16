@@ -1,11 +1,23 @@
 // controllers/propertyController.js
 const db = require('../config/db');
 
-// Get all properties
+// Get all properties with partner details
 exports.getAllProperties = async (req, res) => {
     try {
-        const [results] = await db.query('SELECT * FROM properties');
-        res.json(results);
+        const [propertyResults] = await db.query('SELECT * FROM properties');
+        
+        // Fetch the partner details for each property
+        const propertiesWithPartners = await Promise.all(propertyResults.map(async (property) => {
+            const [partnerResults] = await db.query('SELECT * FROM partners WHERE partner_id = ?', [property.sources]);
+            if (partnerResults.length > 0) {
+                property.sources = partnerResults[0]; // Replace sources ID with the partner object
+            } else {
+                property.sources = { name: 'undefined', company: 'undefined' }; // Handle undefined cases
+            }
+            return property;
+        }));
+
+        res.json(propertiesWithPartners);
     } catch (error) {
         console.error('Error fetching properties:', error);
         res.status(500).json({ error: 'Internal Server Error', details: error.message });
@@ -16,14 +28,23 @@ exports.getAllProperties = async (req, res) => {
 exports.getPropertyById = async (req, res) => {
     const { id } = req.params;
     try {
-        const [results] = await db.query('SELECT * FROM properties WHERE id = ?', [id]);
-        if (results.length === 0) {
-            res.status(404).json({ error: 'Property not found' });
-        } else {
-            const property = results[0];
-            property.images = JSON.parse(property.images);  // Parse images as JSON array
-            res.json(property);
+        const [propertyResults] = await db.query('SELECT * FROM properties WHERE id = ?', [id]);
+        if (propertyResults.length === 0) {
+            return res.status(404).json({ error: 'Property not found' });
         }
+        
+        const property = propertyResults[0];
+        property.images = JSON.parse(property.images);  // Parse images as JSON array
+
+        // Fetch the partner details using the sources ID
+        const [partnerResults] = await db.query('SELECT * FROM partners WHERE partner_id = ?', [property.sources]);
+        if (partnerResults.length > 0) {
+            property.sources = partnerResults[0]; // Replace sources ID with the partner object
+        } else {
+            property.sources = null; // If partner not found, return null
+        }
+
+        res.json(property);
     } catch (error) {
         console.error('Error fetching property:', error);
         res.status(500).json({ error: 'Internal Server Error', details: error.message });
@@ -32,14 +53,24 @@ exports.getPropertyById = async (req, res) => {
 
 // Create a new property
 exports.createProperty = async (req, res) => {
-    const { title, availableDate, rooms, bathrooms, location, name, price, tags, description, sources } = req.body;
-    const images = req.files.map(file => '/uploads/' + file.filename); // Array of file paths with '/uploads/' prefix
+    const { title, availableDate, rooms, bathrooms, location, name, price, tags, description } = req.body;
+    let sources = req.body.sources;
+
+    if (typeof sources === 'string') {
+        sources = JSON.parse(sources); // Parse the partner object if it's a string
+    }
+
+    const images = req.files.map(file => '/uploads/' + file.filename); 
     const rented = false;
 
-    // Split tags by ';' and store them as a list
     const formattedTags = tags.split(';').map(tag => tag.trim());
 
-    const property = { title, availableDate, rooms, bathrooms, location, name, price, tags: formattedTags.join(';'), description, images: JSON.stringify(images), rented, sources };
+    const property = { 
+        title, availableDate, rooms, bathrooms, location, name, price, 
+        tags: formattedTags.join(';'), description, 
+        images: JSON.stringify(images), rented, 
+        sources: JSON.stringify(sources)  // Store the partner object as a JSON string
+    };
 
     try {
         await db.query('INSERT INTO properties SET ?', property);

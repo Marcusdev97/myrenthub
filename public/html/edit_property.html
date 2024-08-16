@@ -97,18 +97,19 @@
                 <label for="sources">Sources From</label>
                 <select id="sources" name="sources" required>
                     <option value="" disabled selected>Source From</option>
-                </select>`
+                </select>
               </div>  
               <div class="form-group">
                 <label for="images">Images</label>
                 <input type="file" id="images" name="images" multiple>
                 <div id="imagePreview"></div>
               </div>
-              <div class="form-group">
+              <!-- Wrap the agent section in a div with id="agentSection" -->
+              <div id="agentSection" class="form-group" style="display: none;">
                 <label for="agent">Agent Handle</label>
-                <select id="agent" name="agent" required>
-                    <option value="" disabled selected>Agent Handle</option>
-                </select>`
+                <select id="agent" name="agent">
+                    <option value="" disabled selected>Select Agent</option>
+                </select>
               </div>  
               <button type="submit" id="saveButton">Save</button>
               <button type="button" id="deleteButton">Delete</button>

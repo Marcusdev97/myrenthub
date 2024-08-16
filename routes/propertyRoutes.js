@@ -23,6 +23,7 @@ router.get('/:id', propertyController.getPropertyById);
 // Get the agents and partners
 router.get('/agents', propertyController.getAllAgents);
 router.get('/partners', propertyController.getAllPartners);
+router.get('/rented', propertyController.getRentedProperties);
 
 // Post the image & properties
 router.post('/upload', upload.array('images', 10), propertyController.createProperty);

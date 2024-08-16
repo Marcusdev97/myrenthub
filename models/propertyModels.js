@@ -13,26 +13,26 @@ const PropertyModel = {
   },
 
   create: async function(newProperty) {
-    const { title, availableDate, rooms, bathrooms, location, name, price, tags, description, images, rented } = newProperty;
+    const { title, availableDate, rooms, bathrooms, location, name, price, tags, description, images, rented, sources, agent_id } = newProperty;
     const sql = `
       INSERT INTO properties 
-      (title, availableDate, rooms, bathrooms, location, name, price, tags, description, images, rented, sources)
-      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+      (title, availableDate, rooms, bathrooms, location, name, price, tags, description, images, rented, sources, agent_id)
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     `;
-    const [result] = await db.query(sql, [title, availableDate, rooms, bathrooms, location, name, price, tags, description, images, rented, sources]);
+    const [result] = await db.query(sql, [title, availableDate, rooms, bathrooms, location, name, price, tags, description, images, rented, sources, agent_id]);
     return result.insertId;
   },
 
   update: async function(id, updatedProperty) {
-    const { title, availableDate, rooms, bathrooms, location, name, price, tags, description, images, rented, sources } = updatedProperty;
+    const { title, availableDate, rooms, bathrooms, location, name, price, tags, description, images, rented, sources, agent_id } = updatedProperty;
     const sql = `
       UPDATE properties SET 
       title = ?, availableDate = ?, rooms = ?, bathrooms = ?, location = ?, 
       name = ?, price = ?, tags = ?, description = ?, images = ?, rented = ?,
-      sources = ? 
+      sources = ?, agent_id = ?
       WHERE id = ?
     `;
-    await db.query(sql, [title, availableDate, rooms, bathrooms, location, name, price, tags, description, images, rented, id, sources]);
+    await db.query(sql, [title, availableDate, rooms, bathrooms, location, name, price, tags, description, images, rented, sources, agent_id, id]);
     return this.findById(id);
   },
 

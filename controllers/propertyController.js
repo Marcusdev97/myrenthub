@@ -5,7 +5,7 @@ const db = require('../config/db');
 exports.getAllProperties = async (req, res) => {
     try {
         // Fetch properties without an assigned agent
-        const [propertyResults] = await db.query('SELECT * FROM properties WHERE agent_id IS NULL');
+        const [propertyResults] = await db.query('SELECT * FROM properties WHERE agent IS NULL');
         
         const propertiesWithPartners = await Promise.all(propertyResults.map(async (property) => {
             const [partnerResults] = await db.query('SELECT * FROM partners WHERE partner_id = ?', [property.sources]);
@@ -84,10 +84,10 @@ exports.createProperty = async (req, res) => {
 // Update a property
 exports.updateProperty = async (req, res) => {
     const { id } = req.params;
-    const { rented, title, availableDate, rooms, bathrooms, location, name, price, tags, description, sources } = req.body;
-    
+    const { rented, title, availableDate, rooms, bathrooms, location, name, price, tags, description, sources, agent } = req.body;
+
     // Handle only the rented update
-    if (typeof rented !== 'undefined' && !title && !availableDate && !rooms && !bathrooms && !location && !name && !price && !tags && !description && !sources) {
+    if (typeof rented !== 'undefined' && !title && !availableDate && !rooms && !bathrooms && !location && !name && !price && !tags && !description && !sources && !agent) {
         try {
             await db.query('UPDATE properties SET rented = ? WHERE id = ?', [rented, id]);
             res.status(200).send('Property status updated successfully');
@@ -110,7 +110,7 @@ exports.updateProperty = async (req, res) => {
         const updatedProperty = {
             title, availableDate, rooms, bathrooms, location, name, price,
             tags: tags ? tags.split(';').map(tag => tag.trim()).join(';') : undefined, description, rented: rented === 'true', images: JSON.stringify(images),
-            sources
+            sources, agent // Make sure agent is included in the update
         };
 
         // Remove undefined properties
@@ -170,7 +170,7 @@ exports.getAllPartners = async (req, res) => {
 exports.getRentedProperties = async (req, res) => {
     try {
         // Fetch properties with an assigned agent
-        const [propertyResults] = await db.query('SELECT * FROM properties WHERE agent_id IS NOT NULL');
+        const [propertyResults] = await db.query('SELECT * FROM properties WHERE agent IS NOT NULL');
         
         const propertiesWithDetails = await Promise.all(propertyResults.map(async (property) => {
             const [partnerResults] = await db.query('SELECT * FROM partners WHERE partner_id = ?', [property.sources]);
@@ -180,7 +180,7 @@ exports.getRentedProperties = async (req, res) => {
                 property.sources = { name: 'undefined', company: 'undefined' };
             }
 
-            const [agentResults] = await db.query('SELECT * FROM agents WHERE agent_id = ?', [property.agent_id]);
+            const [agentResults] = await db.query('SELECT * FROM agents WHERE agent = ?', [property.agent]);
             if (agentResults.length > 0) {
                 property.agent = agentResults[0];
             } else {

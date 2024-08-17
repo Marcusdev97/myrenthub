@@ -191,7 +191,7 @@ document.addEventListener('DOMContentLoaded', () => {
     formData.append('rented', rented);
     formData.append('sources', sources);
     if (agent) {
-      formData.append('agent', agent);
+      formData.append('agent', agent); // Ensure agent is added to the form data
     }
 
     let images = [];

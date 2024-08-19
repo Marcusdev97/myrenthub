@@ -23,7 +23,6 @@ router.get('/:id', propertyController.getPropertyById);
 // Get the agents and partners
 router.get('/agents', propertyController.getAllAgents);
 router.get('/partners', propertyController.getAllPartners);
-router.get('/rented', propertyController.getRentedProperties);
 
 // Post the image & properties
 router.post('/upload', upload.array('images', 10), propertyController.createProperty);
@@ -32,7 +31,5 @@ router.patch('/:id', propertyController.updateProperty);
 
 // Delete the property
 router.delete('/:id', propertyController.deleteProperty);
-
-
 
 module.exports = router;

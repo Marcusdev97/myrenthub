@@ -11,6 +11,7 @@ const db = require('./config/db');
 const propertyRoutes = require('./routes/propertyRoutes');
 const agentRoutes = require('./routes/agentRoutes');
 const partnerRoutes = require('./routes/partnerRoutes');
+const rentedRoutes = require('./routes/rentedRoutes'); // New Rented Routes
 
 // Middlewares
 app.use(express.static(path.join(__dirname, 'public')));
@@ -21,6 +22,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use('/api/properties', propertyRoutes);
 app.use('/api/agents', agentRoutes);
 app.use('/api/partners', partnerRoutes);
+app.use('/api/rented', rentedRoutes); // Add the new rented routes here
 app.use('/fontawesome-free-6.6.0-web', express.static(path.join(__dirname, 'fontawesome-free-6.6.0-web')));
 
 // Serve HTML files
@@ -33,8 +35,8 @@ app.get('/add_property.html', (req, res) => {
 app.get('/edit_property.html', (req, res) => {
   res.sendFile(path.join(__dirname, 'public/html/edit_property.html'));
 });
-app.get('/my_rented_properties_list.html', (req, res) => {
-  res.sendFile(path.join(__dirname, 'public/html/my_rented_properties_list.html'));
+app.get('/rented_property.html', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public/html/rented_property.html'));
 });
 
 app.get('/', (req, res) => {

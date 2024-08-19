@@ -167,32 +167,4 @@ exports.getAllPartners = async (req, res) => {
     }
 };
 
-exports.getRentedProperties = async (req, res) => {
-    try {
-        // Fetch properties with an assigned agent
-        const [propertyResults] = await db.query('SELECT * FROM properties WHERE agent IS NOT NULL');
-        
-        const propertiesWithDetails = await Promise.all(propertyResults.map(async (property) => {
-            const [partnerResults] = await db.query('SELECT * FROM partners WHERE partner_id = ?', [property.sources]);
-            if (partnerResults.length > 0) {
-                property.sources = partnerResults[0];
-            } else {
-                property.sources = { name: 'undefined', company: 'undefined' };
-            }
 
-            const [agentResults] = await db.query('SELECT * FROM agents WHERE agent = ?', [property.agent]);
-            if (agentResults.length > 0) {
-                property.agent = agentResults[0];
-            } else {
-                property.agent = { name: 'undefined', contact_info: 'undefined' };
-            }
-
-            return property;
-        }));
-
-        res.json(propertiesWithDetails);
-    } catch (error) {
-        console.error('Error fetching rented properties:', error);
-        res.status(500).json({ error: 'Internal Server Error', details: error.message });
-    }
-};

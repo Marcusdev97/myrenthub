@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="/css/admin.css">
-    <link rel="stylesheet" href="/css/my_rented_properties_list.css">
+    <link rel="stylesheet" href="/css/rented_property.css">
     <link rel="stylesheet" href="../../fontawesome-free-6.6.0-web/css/all.min.css">
     <title>Rented Properties</title>
 </head>
@@ -18,7 +18,7 @@
         <li><a href="index.html"><i class="fas fa-home"></i> Home</a></li>
         <li><a href="add_property.html"><i class="fas fa-plus"></i> Add Property</a></li>
         <li><a href="edit_property.html"><i class="fas fa-edit"></i> Edit Property</a></li>
-        <li><a href="my_rented_properties_list.html"><i class="fas fa-home"></i> Rented Properties</a></li>
+        <li><a href="rented_property.html"><i class="fas fa-home"></i> Rented Properties</a></li>
       </ul>
     </div>
     <div class="main-content">
@@ -26,11 +26,12 @@
         <h1>My Rented Properties List</h1>
       </header>
       <section class="content-section">
-        <!-- my_rented_properties_list.html -->
-        <ul id="rentedPropertyList" class="property-list"></ul>
+        <ul id="rentedPropertyList" class="property-list">
+          <!-- Property cards will be dynamically injected here by JavaScript -->
+        </ul>
       </section>
     </div>
   </div>
-  <script src="/js/my_rented_properties_list.js"></script>
+  <script src="/js/rented_property.js"></script>
 </body>
 </html>

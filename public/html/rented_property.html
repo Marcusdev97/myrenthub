@@ -25,34 +25,49 @@
       <header>
         <h1>My Rented Properties List</h1>
       </header>
-      <section class="content-section">
+      <div class="content-section">
         <div id="rentedPropertyList"></div>
         <!-- Property cards will be dynamically injected here by JavaScript -->
         </ul>
-      </section>
+      </div>
 
     <!-- Modal structure -->
     <div id="editModal" class="modal">
       <div class="modal-content">
           <span class="close">&times;</span>
-          <h3>Edit Property</h3>
           <form id="editForm">
-              <!-- Add your input fields here -->
               <input type="hidden" id="propertyId" name="propertyId">
-              <label for="check_in_date">Check-In Date:</label>
-              <input type="date" id="check_in_date" name="check_in_date"><br>
-              <label for="tenancy_fees">Tenancy Fees:</label>
-              <input type="text" id="tenancy_fees" name="tenancy_fees"><br>
-              <label for="balance">Balance:</label>
-              <input type="text" id="balance" name="balance"><br>
-              <label for="internet_needed">Internet Needed:</label>
-              <input type="checkbox" id="internet_needed" name="internet_needed"><br>
-              <label for="remark">Remarks:</label>
-              <textarea id="remark" name="remark"></textarea><br>
-              <button type="submit">Save</button>
+    
+              <div class="modal-section">
+                <h3 id="modalTitle" class="modal-title"></h3> 
+                  <label for="check_in_date">Check-In Date:</label>
+                  <input type="date" id="check_in_date" name="check_in_date">
+    
+                  <label for="tenancy_fees">Tenancy Fees:</label>
+                  <input type="text" id="tenancy_fees" name="tenancy_fees">
+    
+                  <label for="balance">Balance:</label>
+                  <input type="text" id="balance" name="balance">
+              </div>
+    
+              <div class="modal-section">
+                  <h3>Other Details</h3>
+                  <div class="checkbox-container">
+                    <label for="internet_needed">Internet Needed:</label>
+                    <input type="checkbox" id="internet_needed" name="internet_needed">
+                  </div>
+                  <label for="remark">Remarks:</label>
+                  <textarea id="remark" name="remark"></textarea>
+              </div>
+    
+              <div class="modal-section" style="width: 100%; text-align: center;">
+                  <button type="submit">Save</button>
+              </div>
           </form>
       </div>
     </div>
+    
+    
     
     </div>
   </div>

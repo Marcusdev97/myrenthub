@@ -39,7 +39,7 @@ exports.getRentedProperties = async (req, res) => {
             // Fetch agent details
             const [agentResults] = await db.query('SELECT * FROM agents WHERE agent_id = ?', [property.agent]);
             if (agentResults.length > 0) {
-                property.agent = agentResults[0].name;
+                property.agent = agentResults[0];
             } else {
                 property.agent = 'undefined';
             }
@@ -101,6 +101,17 @@ exports.updateRentedUnit = async (req, res) => {
     const { check_in_date, tenancy_fees, balance, internet_needed, remark } = req.body;
 
     try {
+        // Log incoming data
+        console.log('Updating rented unit with data:', { id, check_in_date, tenancy_fees, balance, internet_needed, remark });
+
+        // Check the current state of the property in the database
+        const [currentData] = await db.query('SELECT * FROM rented_units WHERE property_id = ?', [id]);
+        console.log('Current data in DB:', currentData);
+
+        if (currentData.length === 0) {
+            return res.status(404).json({ error: 'Property not found' });
+        }
+
         const query = `
             UPDATE rented_units 
             SET 
@@ -112,7 +123,12 @@ exports.updateRentedUnit = async (req, res) => {
             WHERE 
                 property_id = ?;
         `;
-        await db.query(query, [check_in_date, tenancy_fees, balance, internet_needed, remark, id]);
+        const [result] = await db.query(query, [check_in_date, tenancy_fees, balance, internet_needed, remark, id]);
+        console.log('Database update result:', result);
+
+        if (result.affectedRows === 0) {
+            return res.status(404).json({ error: 'Property not found or no changes made' });
+        }
 
         res.json({ success: true, message: 'Rented unit updated successfully' });
     } catch (error) {
@@ -120,3 +136,4 @@ exports.updateRentedUnit = async (req, res) => {
         res.status(500).json({ error: 'Internal Server Error', details: error.message });
     }
 };
+

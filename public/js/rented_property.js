@@ -1,4 +1,8 @@
 document.addEventListener('DOMContentLoaded', () => {
+
+    const modal = document.getElementById('editModal');
+    const closeBtn = document.querySelector('.close');
+
     const loadRentedProperties = async () => {
         try {
             const response = await fetch('/api/rented');
@@ -15,12 +19,12 @@ document.addEventListener('DOMContentLoaded', () => {
                     <div class="property-card">
                         <h3>${property.title}</h3>
                         <p><strong>Price:</strong> ${property.price}</p>
-                        <p><strong>Agent:</strong> ${property.agent}</p>
-                        <p><strong>Source:</strong> ${property.sources}</p>
+                        <p><strong>Agent:</strong> ${property.agent.name}</p>
+                        <p><strong>Source:</strong> ${property.sources.name} - ${property.sources.company}</p>
                         <p><strong>Check-In Date:</strong> ${property.check_in_date || 'Update Required'}</p>
                         <p><strong>Tenancy Fees:</strong> ${property.tenancy_fees || 'Update Required'}</p>
                         <p><strong>Balance:</strong> ${property.balance || 'Update Required'}</p>
-                        <p><strong>Internet Needed:</strong> ${property.internet_needed ? 'Yes' : 'No'}</p>
+                        <p><strong>Internet Needed:</strong> ${property.internet_needed || 'Update Required'}</p>
                         <p><strong>Remarks:</strong> ${property.remark || 'No remarks yet'}</p>
                         <button class="view-details" data-id="${property.property_id}">
                             <i class="fa-solid fa-eye"></i> View Details
@@ -31,11 +35,13 @@ document.addEventListener('DOMContentLoaded', () => {
                 rentedList.innerHTML += propertyCard;
             });
 
+            closeBtn.addEventListener('click', closeModal);
+
             // Event listener for the modal open
             document.querySelectorAll('.view-details').forEach(button => {
                 button.addEventListener('click', (event) => {
                     const propertyId = event.currentTarget.dataset.id;
-                    openEditModal(propertyId); // Function to handle modal open
+                    openEditModal(propertyId);
                 });
             });
 
@@ -54,13 +60,62 @@ document.addEventListener('DOMContentLoaded', () => {
             }    
 
             // Populate modal fields with the property details
-            // Your modal opening and form handling logic here
+            document.getElementById('modalTitle').textContent = property.title || 'Property Details';
 
-            document.getElementById('editModal').style.display = 'block';
+            document.getElementById('propertyId').value = property.property_id;
+            document.getElementById('check_in_date').value = property.check_in_date || '';
+            document.getElementById('tenancy_fees').value = property.tenancy_fees || '';
+            document.getElementById('balance').value = property.balance || '';
+            document.getElementById('internet_needed').checked = property.internet_needed || false;
+            document.getElementById('remark').value = property.remark || '';
+
+            // Open the modal
+            modal.style.display = 'flex';
+
         } catch (error) {
             console.error('Failed to open edit modal:', error);
         }
     };
+
+    const closeModal = () => {
+        modal.style.display = 'none';
+    };
+
+    const handleFormSubmit = async (e) => {
+        e.preventDefault();
+
+        const propertyId = document.getElementById('propertyId').value;
+        const check_in_date = document.getElementById('check_in_date').value;
+        const tenancy_fees = document.getElementById('tenancy_fees').value;
+        const balance = document.getElementById('balance').value;
+        const internet_needed = document.getElementById('internet_needed').checked;
+        const remark = document.getElementById('remark').value;
+
+        const updatedData = { check_in_date, tenancy_fees, balance, internet_needed, remark };
+
+        try {
+            const response = await fetch(`/api/rented/${propertyId}`, {
+                method: 'PATCH',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(updatedData)
+            });
+
+            if (!response.ok) {
+                throw new Error('Failed to update property');
+            }
+
+            alert('Property updated successfully!');
+            closeModal();
+            loadRentedProperties(); // Refresh the property list
+        } catch (error) {
+            alert(`An error occurred: ${error.message}`);
+        }
+    };
+
+    document.getElementById('editForm').addEventListener('submit', handleFormSubmit);
+    document.querySelector('.close').addEventListener('click', closeModal);
 
     loadRentedProperties();
 });

@@ -1,88 +1,8 @@
-/* Container to hold all property cards */
-.property-list {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 20px;
-    justify-content: center;
-    padding: 20px;
-}
-
-/* Each property card with a fixed width */
-.property-card {
-    width: 300px;
-    margin: 10px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    padding: 15px;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-}
-
-#rentedList {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-between;
-}
-
-/* Make sure the card looks good on smaller screens */
-@media (max-width: 1024px) {
-    .property-card {
-        width: calc(33.333% - 40px); /* Adjust width for smaller screens to fit 3 cards */
-    }
-}
-
-@media (max-width: 768px) {
-    .property-card {
-        width: calc(50% - 40px); /* 2 cards per row on tablet/small screens */
-    }
-}
-
-@media (max-width: 480px) {
-    .property-card {
-        width: calc(100% - 40px); /* 1 card per row on mobile screens */
-    }
-}
-
-/* Styling the card content */
-.property-card h3 {
-    margin: 0 0 15px 0;
-    font-size: 1.5rem;
-    color: #333;
-}
-
-.property-card p {
-    margin: 10px 0;
-    font-size: 1rem;
-    color: #555;
-}
-
-/* Style for the update button */
-.update-button {
-    display: inline-block;
-    margin-top: 20px;
-    padding: 10px 15px;
-    background-color: #28a745;
-    color: #fff;
-    text-align: center;
-    text-decoration: none;
-    border-radius: 5px;
-    cursor: pointer;
-    border: none;
-    font-size: 1rem;
-    transition: background-color 0.2s ease;
-}
-
-.update-button:hover {
-    background-color: #218838;
-}
-
-/* Hover effect on the card */
-.property-card:hover {
-    transform: scale(1.05);
-}
-
-/* The Modal (background) */
+/* Centering the modal */
 .modal {
     display: none;
+    align-items: center;
+    justify-content: center;
     position: fixed;
     z-index: 1;
     left: 0;
@@ -90,31 +10,187 @@
     width: 100%;
     height: 100%;
     overflow: auto;
-    background-color: rgb(0,0,0);
-    background-color: rgba(0,0,0,0.4);
-    padding-top: 60px;
+    background-color: rgba(0, 0, 0, 0.5);
 }
 
-/* Modal Content */
+/* Modal Content Styling */
 .modal-content {
-    background-color: #fefefe;
-    margin: 5% auto;
-    padding: 20px;
-    border: 1px solid #888;
-    width: 80%;
+    background-color: #ffffff;
+    padding: 40px 30px; /* Increased padding for better spacing */
+    border-radius: 10px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+    max-width: 600px;
+    width: 90%;
+    margin: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
 }
 
-/* The Close Button */
-.close {
-    color: #aaa;
-    float: right;
-    font-size: 28px;
+/* Modal Form Sections */
+.modal-section {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    width: 100%;
+}
+
+.modal-title {
+    font-size: 1.5rem;
     font-weight: bold;
+    text-align: center;
+    margin-bottom: 20px; /* Add some space below the title */
+    width: 100%; /* Ensure the title spans the full width */
 }
 
-.close:hover,
-.close:focus {
-    color: black;
-    text-decoration: none;
+.modal-section label {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 5px;
+    width: 100%; /* Ensure labels align well */
+}
+
+.modal-section input[type="text"],
+.modal-section input[type="date"],
+.modal-section textarea,
+.modal-section select {
+    width: 100%; /* Make all inputs full-width */
+    padding: 12px;
+    border-radius: 4px;
+    border: 1px solid #ddd;
+    font-size: 0.9rem;
+    box-sizing: border-box;
+}
+
+.modal-section textarea {
+    width: 100%;
+    resize: none;
+    height: 80px;
+}
+
+.checkbox-container {
+    display: flex;
+    align-items: center;
+    gap: 10px; /* Spacing between label and checkbox */
+    width: 100%; /* Ensure full width for consistent layout */
+}
+
+.modal-section input[type="checkbox"] {
+    width: 18px;
+    height: 18px;
+    margin-right: 10px;
     cursor: pointer;
+}
+
+/* Modal Buttons */
+.modal-section button {
+    background-color: #007bff;
+    color: white;
+    padding: 12px 24px;
+    border: none;
+    border-radius: 4px;
+    font-size: 1rem;
+    cursor: pointer;
+    width: 100%;
+    margin-top: 20px;
+}
+
+.modal-section button:hover {
+    background-color: #0056b3;
+}
+
+/* Close Button */
+.close {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    color: #333;
+    font-size: 1.5rem;
+    cursor: pointer;
+}
+
+.close:hover {
+    color: #000;
+}
+
+/* Additional styles for the property card */
+/* Container for property cards */
+#rentedPropertyList {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr); /* 3 columns grid */
+    gap: 20px; /* Space between the cards */
+    padding: 20px;
+}
+
+/* Property Card Styling */
+.property-card {
+    background-color: #f8f9fa;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.property-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+}
+
+.property-card h3 {
+    margin-bottom: 10px;
+    font-size: 1.5rem;
+    color: #333;
+}
+
+.property-card p {
+    margin-bottom: 5px;
+    color: #666;
+}
+
+.view-details {
+    background-color: #007bff;
+    color: #fff;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    font-size: 0.9rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.view-details:hover {
+    background-color: #0056b3;
+}
+
+/* Responsive Breakpoints */
+@media (max-width: 1024px) {
+    #rentedPropertyList {
+        grid-template-columns: repeat(2, 1fr); /* 2 columns grid */
+    }
+}
+
+@media (max-width: 768px) {
+    #rentedPropertyList {
+        grid-template-columns: 1fr; /* 1 column grid */
+    }
+}
+
+/* Additional styles for the property form*/
+
+#editForm button {
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1rem;
+}
+
+#editForm button:hover {
+    background-color: #0056b3;
 }

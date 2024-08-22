@@ -1,307 +1,311 @@
 /* Sidebar Styles */
 .sidebar {
-    width: 250px;
-    background-color: #333;
-    color: white;
-    height: 100vh;
-    padding-top: 20px;
-    position: fixed;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    transition: width 0.3s;
-    z-index: 2;
+  width: 250px;
+  background-color: #333;
+  color: white;
+  height: 100vh;
+  padding-top: 20px;
+  position: fixed;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  transition: width 0.3s;
+  z-index: 2;
+}
+
+.menu {
+  list-style-type: none;
+  padding: 0;
+  width: 100%;
+}
+
+.menu li {
+  width: 100%;
+  display: flex;
+  align-items: center;
+}
+
+.menu li a {
+  color: white;
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  padding: 15px;
+  width: 100%;
+  box-sizing: border-box;
+  transition: background-color 0.3s, padding 0.3s;
+  justify-content: flex-start;
+}
+
+.menu li a i {
+  margin-right: 10px;
+}
+
+.menu li a:hover {
+  background-color: #575757;
+}
+
+#menu-icon {
+  cursor: pointer;
+  padding: 15px;
+  background-color: #4CAF50;
+  color: white;
+  transition: background-color 0.3s, box-shadow 0.3s;
+  text-align: center;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  border-radius: 0;
+}
+
+#menu-icon:hover {
+  background-color: #45a049;
+}
+
+#menu-icon i {
+  margin-right: 8px;
+}
+
+/* Collapsed Sidebar */
+.sidebar.collapsed {
+  width: 70px;
+}
+
+.sidebar.collapsed #menu-icon {
+  justify-content: center;
+  padding: 15px 0;
+}
+
+.sidebar.collapsed .menu-text {
+  display: none;
+}
+
+.sidebar.collapsed .menu li {
+  padding: 0;
+}
+
+.sidebar.collapsed .menu li a {
+  justify-content: center;
+}
+
+.sidebar.collapsed .menu li a i {
+  margin-right: 0;
+}
+
+/* Main Content */
+.main-content {
+  margin-left: 250px;
+  padding: 20px;
+  flex: 1;
+  transition: margin-left 0.3s;
+  z-index: 1;
+}
+
+.sidebar.collapsed ~ .main-content {
+  margin-left: 70px;
+}
+
+/* Property Card Styling */
+/* Container for property cards */
+#rentedPropertyList {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); /* Grid with auto-fill and min-width */
+  gap: 20px; /* Space between the cards */
+  padding: 20px;
+}
+
+/* Property Card Styling */
+.property-card {
+  background-color: #f8f9fa;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 400px; /* Fixed height for uniform card size */
+  overflow: hidden; /* Prevents overflowing content */
+}
+
+.property-card h3 {
+  margin-bottom: 10px;
+  font-size: 1.5rem;
+  color: #333;
+  border-bottom: 2px solid #ddd;
+  padding-bottom: 10px;
+  flex-shrink: 0; /* Ensures the title doesn't shrink */
+}
+
+.property-card p {
+  margin-bottom: -5px;
+  color: #666;
+  overflow: hidden; /* Prevents text overflow */
+  text-overflow: ellipsis; /* Adds ellipsis if text is too long */
+  flex-grow: 1; /* Ensures text takes available space */
+  white-space: nowrap; /* Keeps text in a single line */
+}
+
+.property-card .details {
+  flex-grow: 1;
+  overflow-y: auto; /* Allows scrolling if content exceeds card height */
+  max-height: calc(100% - 40px); /* Ensures the details section respects card height */
+}
+
+.view-details {
+  background-color: #007bff;
+  color: #fff;
+  padding: 10px 15px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  font-size: 0.9rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 20px; /* Adds space above the button */
+  flex-shrink: 0; /* Prevents button from shrinking */
+}
+
+.view-details i {
+  margin-right: 8px; /* Space between the icon and the text */
+}
+
+.view-details:hover {
+  background-color: #0056b3;
+}
+
+/* Responsive Breakpoints */
+@media (max-width: 1024px) {
+  #rentedPropertyList {
+      grid-template-columns: repeat(2, 1fr); /* 2 columns on medium screens */
   }
-  
-  /* Menu */
-  .menu {
-    list-style-type: none;
-    padding: 0;
-    width: 100%;
+}
+
+@media (max-width: 768px) {
+  #rentedPropertyList {
+      grid-template-columns: 1fr; /* 1 column on small screens */
   }
-  
-  .menu li {
-    width: 100%;
-    display: flex;
-    align-items: center;
-  }
-  
-  .menu li a {
-    color: white;
-    text-decoration: none;
-    display: flex;
-    align-items: center;
-    padding: 15px;
-    width: 100%;
-    box-sizing: border-box;
-    transition: background-color 0.3s, padding 0.3s;
-    justify-content: flex-start;
-  }
-  
-  .menu li a i {
-    margin-right: 10px;
-  }
-  
-  .menu li a:hover {
-    background-color: #575757;
-  }
-  
-  /* Admin Menu Button */
-  #menu-icon {
-    cursor: pointer;
-    padding: 15px;
-    background-color: #4CAF50;
-    color: white;
-    transition: background-color 0.3s, box-shadow 0.3s;
-    text-align: center;
-    width: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    box-sizing: border-box;
-    border-radius: 0;
-  }
-  
-  #menu-icon:hover {
-    background-color: #45a049;
-  }
-  
-  #menu-icon i {
-    margin-right: 8px;
-  }
-  
-  /* Collapsed Sidebar */
-  .sidebar.collapsed {
-    width: 70px;
-  }
-  
-  .sidebar.collapsed #menu-icon {
-    justify-content: center;
-    padding: 15px 0;
-  }
-  
-  .sidebar.collapsed .menu-text {
-    display: none;
-  }
-  
-  .sidebar.collapsed .menu li {
-    padding: 0;
-  }
-  
-  .sidebar.collapsed .menu li a {
-    justify-content: center;
-  }
-  
-  .sidebar.collapsed .menu li a i {
-    margin-right: 0;
-  }
-  
-  /* Main Content */
-  .main-content {
-    margin-left: 250px;
-    padding: 20px;
-    flex: 1;
-    transition: margin-left 0.3s;
-    z-index: 1;
-  }
-  
-  .sidebar.collapsed ~ .main-content {
-    margin-left: 70px;
-  }
+}
+
+
+
 
 /* Centering the modal */
 .modal {
-    display: none;
-    align-items: center;
-    justify-content: center;
-    position: fixed;
-    z-index: 1;
-    left: 0;
-    top: 0;
-    width: 100%;
-    height: 100%;
-    overflow: auto;
-    background-color: rgba(0, 0, 0, 0.5);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  position: fixed;
+  z-index: 1;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  background-color: rgba(0, 0, 0, 0.5);
 }
 
 /* Modal Content Styling */
 .modal-content {
-    background-color: #ffffff;
-    padding: 40px 30px; /* Increased padding for better spacing */
-    border-radius: 10px;
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
-    max-width: 600px;
-    width: 90%;
-    margin: auto;
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
+  background-color: #ffffff;
+  padding: 40px 30px; /* Increased padding for better spacing */
+  border-radius: 10px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+  max-width: 600px;
+  width: 90%;
+  margin: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
 }
 
 /* Modal Form Sections */
 .modal-section {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 15px;
-    width: 100%;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px;
+  width: 100%;
 }
 
 .modal-title {
-    font-size: 1.5rem;
-    font-weight: bold;
-    text-align: center;
-    margin-bottom: 20px; /* Add some space below the title */
-    width: 100%; /* Ensure the title spans the full width */
+  font-size: 1.5rem;
+  font-weight: bold;
+  text-align: center;
+  margin-bottom: 20px; /* Add some space below the title */
+  width: 100%; /* Ensure the title spans the full width */
 }
 
 .modal-section label {
-    font-size: 0.9rem;
-    font-weight: 600;
-    color: #333;
-    margin-bottom: 5px;
-    width: 100%; /* Ensure labels align well */
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 5px;
+  width: 100%; /* Ensure labels align well */
 }
 
 .modal-section input[type="text"],
 .modal-section input[type="date"],
 .modal-section textarea,
 .modal-section select {
-    width: 100%; /* Make all inputs full-width */
-    padding: 12px;
-    border-radius: 4px;
-    border: 1px solid #ddd;
-    font-size: 0.9rem;
-    box-sizing: border-box;
+  width: 100%; /* Make all inputs full-width */
+  padding: 12px;
+  border-radius: 4px;
+  border: 1px solid #ddd;
+  font-size: 0.9rem;
+  box-sizing: border-box;
 }
 
 .modal-section textarea {
-    width: 100%;
-    resize: none;
-    height: 80px;
+  width: 100%;
+  resize: none;
+  height: 80px;
 }
 
 .checkbox-container {
-    display: flex;
-    align-items: center;
-    gap: 10px; /* Spacing between label and checkbox */
-    width: 100%; /* Ensure full width for consistent layout */
+  display: flex;
+  align-items: center;
+  gap: 10px; /* Spacing between label and checkbox */
+  width: 100%; /* Ensure full width for consistent layout */
 }
 
 .modal-section input[type="checkbox"] {
-    width: 18px;
-    height: 18px;
-    margin-right: 10px;
-    cursor: pointer;
+  width: 18px;
+  height: 18px;
+  margin-right: 10px;
+  cursor: pointer;
 }
 
 /* Modal Buttons */
 .modal-section button {
-    background-color: #007bff;
-    color: white;
-    padding: 12px 24px;
-    border: none;
-    border-radius: 4px;
-    font-size: 1rem;
-    cursor: pointer;
-    width: 100%;
-    margin-top: 20px;
+  background-color: #007bff;
+  color: white;
+  padding: 12px 24px;
+  border: none;
+  border-radius: 4px;
+  font-size: 1rem;
+  cursor: pointer;
+  width: 100%;
+  margin-top: 20px;
 }
 
 .modal-section button:hover {
-    background-color: #0056b3;
+  background-color: #0056b3;
 }
 
 /* Close Button */
 .close {
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    color: #333;
-    font-size: 1.5rem;
-    cursor: pointer;
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  color: #333;
+  font-size: 1.5rem;
+  cursor: pointer;
 }
 
 .close:hover {
-    color: #000;
-}
-
-/* Additional styles for the property card */
-/* Container for property cards */
-#rentedPropertyList {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr); /* 3 columns grid */
-    gap: 20px; /* Space between the cards */
-    padding: 20px;
-}
-
-/* Property Card Styling */
-.property-card {
-    background-color: #f8f9fa;
-    padding: 12px;
-    border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-}
-
-.property-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
-}
-
-.property-card h3 {
-    margin-bottom: 10px;
-    font-size: 1.5rem;
-    color: #333;
-}
-
-.property-card p {
-    margin-bottom: 5px;
-    color: #666;
-}
-
-.view-details {
-    background-color: #007bff;
-    color: #fff;
-    padding: 10px 15px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-    font-size: 0.9rem;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.view-details:hover {
-    background-color: #0056b3;
-}
-
-/* Responsive Breakpoints */
-@media (max-width: 1024px) {
-    #rentedPropertyList {
-        grid-template-columns: repeat(2, 1fr); /* 2 columns grid */
-    }
-}
-
-@media (max-width: 768px) {
-    #rentedPropertyList {
-        grid-template-columns: 1fr; /* 1 column grid */
-    }
-}
-
-/* Additional styles for the property form*/
-
-#editForm button {
-    padding: 10px 20px;
-    background-color: #007bff;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    font-size: 1rem;
-}
-
-#editForm button:hover {
-    background-color: #0056b3;
+  color: #000;
 }

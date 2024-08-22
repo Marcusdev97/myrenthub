@@ -17,7 +17,7 @@ document.addEventListener('DOMContentLoaded', () => {
             rentedProperties.forEach(property => {
                 const propertyCard = `
                     <div class="property-card">
-                        <h3>${property.title}</h3>
+                        <h3>${property.title || 'Update Required'} - ${property.unit_number}</h3>
                         <p><strong>Price:</strong> ${property.price}</p>
                         <p><strong>Agent:</strong> ${property.agent.name}</p>
                         <p><strong>Source:</strong> ${property.sources.name} - ${property.sources.company}</p>
@@ -71,7 +71,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             // Populate modal fields with the property details
             document.getElementById('modalTitle').textContent = property.title || 'Property Details';
-
+            document.getElementById('unit_number').textContent = property.unit_number || '';
             document.getElementById('propertyId').value = property.property_id;
             document.getElementById('check_in_date').value = formatDate(property.check_in_date) || '';
             document.getElementById('tenancy_fees').value = property.tenancy_fees || '';
@@ -95,13 +95,15 @@ document.addEventListener('DOMContentLoaded', () => {
         e.preventDefault();
 
         const propertyId = document.getElementById('propertyId').value;
+        const unit_number = document.getElementById('unit_number').value;
         const check_in_date = document.getElementById('check_in_date').value;
         const tenancy_fees = document.getElementById('tenancy_fees').value;
         const balance = document.getElementById('balance').value;
         const internet_needed = document.getElementById('internet_needed').checked;
         const remark = document.getElementById('remark').value;
 
-        const updatedData = { check_in_date, tenancy_fees, balance, internet_needed, remark };
+        const updatedData = { check_in_date, unit_number, tenancy_fees, balance, internet_needed, remark };
+        console.log(updatedData);
 
         try {
             const response = await fetch(`/api/rented/${propertyId}`, {

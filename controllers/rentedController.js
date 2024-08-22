@@ -4,24 +4,25 @@ exports.getRentedProperties = async (req, res) => {
     try {
         // Query to get rented properties and related data
         const query = `
-            SELECT 
-                p.id AS property_id,
-                p.title,
-                p.name AS condo_name,
-                p.price,
-                p.sources,
-                p.agent,
-                COALESCE(r.check_in_date, 'Update Required') AS check_in_date,
-                COALESCE(r.tenancy_fees, 'Update Required') AS tenancy_fees,
-                COALESCE(r.balance, 'Update Required') AS balance,
-                COALESCE(r.internet_needed, 'Update Required') AS internet_needed,
-                COALESCE(r.remark, 'No remarks yet') AS remark
-            FROM 
-                properties p
-            LEFT JOIN 
-                rented_units r ON p.id = r.property_id
-            WHERE 
-                p.rented = 1 AND p.agent IS NOT NULL;
+                        SELECT 
+                        p.id AS property_id,
+                        p.title,
+                        p.name AS condo_name,
+                        p.price,
+                        p.sources,
+                        p.agent,
+                        COALESCE(r.unit_number, 'Update Required') AS unit_number,
+                        COALESCE(r.check_in_date, 'Update Required') AS check_in_date,
+                        COALESCE(r.tenancy_fees, 'Update Required') AS tenancy_fees,
+                        COALESCE(r.balance, 'Update Required') AS balance,
+                        COALESCE(r.internet_needed, 'Update Required') AS internet_needed,
+                        COALESCE(r.remark, 'No remarks yet') AS remark
+                    FROM
+                        properties p
+                    LEFT JOIN 
+                        rented_units r ON p.id = r.property_id
+                    WHERE 
+                        p.rented = 1 AND p.agent IS NOT NULL;
         `;
 
         const [properties] = await db.query(query);
@@ -65,6 +66,7 @@ exports.getRentedPropertyById = async (req, res) => {
                 p.price,
                 p.sources,
                 p.agent,
+                r.unit_number,
                 r.check_in_date,
                 r.tenancy_fees,
                 r.balance,
@@ -98,11 +100,11 @@ exports.getRentedPropertyById = async (req, res) => {
 
 exports.updateRentedUnit = async (req, res) => {
     const { id } = req.params;
-    const { check_in_date, tenancy_fees, balance, internet_needed, remark } = req.body;
+    const { unit_number, check_in_date, tenancy_fees, balance, internet_needed, remark } = req.body;
 
     try {
         // Log incoming data
-        console.log('Updating rented unit with data:', { id, check_in_date, tenancy_fees, balance, internet_needed, remark });
+        console.log('Updating rented unit with data:', { id, unit_number, check_in_date, tenancy_fees, balance, internet_needed, remark });
 
         // Check the current state of the property in the database
         const [currentData] = await db.query('SELECT * FROM rented_units WHERE property_id = ?', [id]);
@@ -115,6 +117,7 @@ exports.updateRentedUnit = async (req, res) => {
         const query = `
             UPDATE rented_units 
             SET 
+                unit_number = ?,
                 check_in_date = ?, 
                 tenancy_fees = ?, 
                 balance = ?, 
@@ -123,7 +126,7 @@ exports.updateRentedUnit = async (req, res) => {
             WHERE 
                 property_id = ?;
         `;
-        const [result] = await db.query(query, [check_in_date, tenancy_fees, balance, internet_needed, remark, id]);
+        const [result] = await db.query(query, [unit_number, check_in_date, tenancy_fees, balance, internet_needed, remark, id]);
         console.log('Database update result:', result);
 
         if (result.affectedRows === 0) {
@@ -136,4 +139,3 @@ exports.updateRentedUnit = async (req, res) => {
         res.status(500).json({ error: 'Internal Server Error', details: error.message });
     }
 };
-

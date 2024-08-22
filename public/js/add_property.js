@@ -91,4 +91,8 @@ document.addEventListener('DOMContentLoaded', async () => {
             }
         });
     }
+
+    document.getElementById('menu-icon').addEventListener('click', function() {
+        document.getElementById('sidebar').classList.toggle('collapsed');
+    });
 });

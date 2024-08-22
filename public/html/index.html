@@ -5,28 +5,48 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="/css/admin.css">
   <link rel="stylesheet" href="../../fontawesome-free-6.6.0-web/css/all.min.css">
-  <title>Admin Dashboard</title>
+  <title>Dashboard</title>
 </head>
 <body>
   <div class="container">
-    <div class="sidebar">
-      <div class="logo">
-        <h2>Admin Menu</h2>
-      </div>
-      <ul class="menu">
-        <li><a href="index.html"><i class="fas fa-home"></i> Home</a></li>
-        <li><a href="add_property.html"><i class="fas fa-plus"></i> Add Property</a></li>
-        <li><a href="edit_property.html"><i class="fas fa-edit"></i> Edit Property</a></li>
-        <li><a href="rented_property.html"><i class="fas fa-home"></i> Rented Properties</a></li>
-      </ul>
+    <div class="sidebar" id="sidebar">
+        <ul class="menu">
+            <li id="menu-icon">
+                <i class="fa-solid fa-bars"></i> <span class="menu-text">Admin Menu</span>
+            </li>
+            <li><a href="index.html"><i class="fas fa-home"></i> <span class="menu-text">Home</span></a></li>
+            <li><a href="add_property.html"><i class="fas fa-plus"></i> <span class="menu-text">Add Property</span></a></li>
+            <li><a href="edit_property.html"><i class="fas fa-edit"></i> <span class="menu-text">Edit Property</span></a></li>
+            <li><a href="rented_property.html"><i class="fas fa-house-user"></i> <span class="menu-text">Rented Properties</span></a></li>
+        </ul>
     </div>
     <div class="main-content">
-      <header>
-        <h1>Admin Dashboard</h1>
-      </header>
-      <!-- Dashboard content here -->
+        <header>
+            <h1>Dashboard</h1>
+        </header>
+        <div class="dashboard">
+            <div class="dashboard-item">
+                <i class="fas fa-user dashboard-icon"></i>
+                <h3>Total Commissions</h3>
+                <p>$50,000</p> <!-- Placeholder for the sales data -->
+            </div>
+            <div class="dashboard-item">
+                <i class="fas fa-check dashboard-icon"></i>
+                <h3>Upcoming Check-ins</h3>
+                <p>15 Scheduled</p> <!-- Placeholder for the check-ins data -->
+            </div>
+            <div class="dashboard-item">
+                <i class="fas fa-chart-line dashboard-icon"></i>
+                <h3>Lorem Lipsum</h3>
+                <p>Metric XYZ</p> <!-- Placeholder for the lorem lipsum data -->
+            </div>
+        </div>
     </div>
-  </div>
+</div>
+
+</div>
+
+
   <script src="/js/admin.js"></script>
 </body>
 </html>

@@ -57,13 +57,23 @@ document.addEventListener('DOMContentLoaded', () => {
 
             if (!property || typeof property !== 'object') {
                 throw new Error('Invalid property data');
-            }    
+            }
+            
+            // Format the date to yyyy-MM-dd
+            const formatDate = (dateString) => {
+            if (!dateString) return '';
+            const date = new Date(dateString);
+            const year = date.getFullYear();
+            const month = ('0' + (date.getMonth() + 1)).slice(-2); // Add leading zero if necessary
+            const day = ('0' + date.getDate()).slice(-2); // Add leading zero if necessary
+            return `${year}-${month}-${day}`;
+            };
 
             // Populate modal fields with the property details
             document.getElementById('modalTitle').textContent = property.title || 'Property Details';
 
             document.getElementById('propertyId').value = property.property_id;
-            document.getElementById('check_in_date').value = property.check_in_date || '';
+            document.getElementById('check_in_date').value = formatDate(property.check_in_date) || '';
             document.getElementById('tenancy_fees').value = property.tenancy_fees || '';
             document.getElementById('balance').value = property.balance || '';
             document.getElementById('internet_needed').checked = property.internet_needed || false;
@@ -113,6 +123,10 @@ document.addEventListener('DOMContentLoaded', () => {
             alert(`An error occurred: ${error.message}`);
         }
     };
+
+    document.getElementById('menu-icon').addEventListener('click', function() {
+        document.getElementById('sidebar').classList.toggle('collapsed');
+    });
 
     document.getElementById('editForm').addEventListener('submit', handleFormSubmit);
     document.querySelector('.close').addEventListener('click', closeModal);

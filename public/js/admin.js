@@ -42,28 +42,10 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   };
 
-  // Function to toggle rented status
-  const toggleRentedStatus = async (id, rented) => {
-    try {
-      const response = await fetch(`/api/properties/${id}`, {
-        method: 'PATCH',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ rented })
-      });
+  document.getElementById('menu-icon').addEventListener('click', function() {
+    document.getElementById('sidebar').classList.toggle('collapsed');
+  });
   
-      if (response.ok) {
-        loadProperties();
-      } else {
-        const errorText = await response.text();
-        alert(`Failed to update property status: ${errorText}`);
-      }
-    } catch (error) {
-      alert('An error occurred while updating the property status.');
-    }
-  };
-
   // Initialize the properties
   loadProperties();
- });
+});

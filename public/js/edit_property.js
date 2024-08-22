@@ -279,6 +279,10 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 
+  document.getElementById('menu-icon').addEventListener('click', function() {
+    document.getElementById('sidebar').classList.toggle('collapsed');
+  });
+
   loadProperties();
   loadPartnersAndAgents();
 });

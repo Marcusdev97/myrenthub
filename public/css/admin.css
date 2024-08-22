@@ -162,6 +162,35 @@ header h1 {
 .dashboard-item p {
   font-size: 18px;
   margin: 5px 0 0 0;
+  color: #333;
+}
+
+.dashboard-item strong {
+  font-size: 24px; /* Make the unit number more prominent */
+  color: #000;     /* Darker color for better visibility */
+}
+
+.dashboard-item em {
+  font-size: 16px; /* Slightly smaller for the date and days remaining */
+  color: #666;     /* Lighter color to differentiate from the unit number */
+  font-style: italic;
+  display: block;  /* Make it appear on a new line */
+  margin-top: 5px; /* Add a bit of space above the date */
+}
+
+.dashboard-item h3 {
+  margin: 10px 0;
+  font-size: 20px;
+  color: #007bff;  /* Keep the existing blue color for headings */
+}
+
+.dashboard-item p {
+  margin-top: 0;
+}
+
+.dashboard-item strong + em {
+  display: inline-block;
+  margin-left: 5px; /* Add some space between the unit number and the date */
 }
 
 .dashboard-icon {
@@ -169,6 +198,49 @@ header h1 {
   margin-bottom: 10px;
   color: #333;
 }
+
+.available-units-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 15px;
+}
+
+.available-units-header i.dashboard-icon {
+  font-size: 50px; /* Size of the icon */
+  /* color: #007bff; Matching the color of the heading */
+  margin-right: 10px; /* Space between icon and heading */
+}
+
+.available-units-header h3 {
+  font-size: 20px;
+  color: #007bff;
+  margin: 10px;
+}
+
+.available-units-item table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 10px;
+}
+
+.available-units-item th,
+.available-units-item td {
+  padding: 10px;
+  text-align: left;
+  border-bottom: 1px solid #ddd;
+}
+
+.available-units-item th {
+  background-color: #f4f4f4;
+  color: #333;
+}
+
+.available-units-item td {
+  font-size: 16px;
+  color: #555;
+}
+
+
 
 /* Responsive adjustments for the dashboard items */
 

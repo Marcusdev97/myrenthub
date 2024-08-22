@@ -23,7 +23,7 @@ const RentedModel = {
       WHERE 
           p.rented = 1 AND p.agent IS NOT NULL;
       `;
-    console.log(sql); // Add this to see the actual query
+      
     const [rows] = await db.query(sql);
     return rows;
   }

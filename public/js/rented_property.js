@@ -68,10 +68,10 @@ document.addEventListener('DOMContentLoaded', () => {
             const day = ('0' + date.getDate()).slice(-2); // Add leading zero if necessary
             return `${year}-${month}-${day}`;
             };
-
+            console.log(property);
             // Populate modal fields with the property details
             document.getElementById('modalTitle').textContent = property.title || 'Property Details';
-            document.getElementById('unit_number').textContent = property.unit_number || '';
+            document.getElementById('unit_number').value = property.unit_number || '';
             document.getElementById('propertyId').value = property.property_id;
             document.getElementById('check_in_date').value = formatDate(property.check_in_date) || '';
             document.getElementById('tenancy_fees').value = property.tenancy_fees || '';

@@ -1,9 +1,10 @@
 {
   "name": "easy-rent-hub-admin",
   "version": "1.0.0",
-  "main": "server.js",
-  "scripts": {
-    "start": "node server.js"
+  "main": "server.js",   "scripts": {
+    "start": "node server.js",  
+    "build": "echo 'No build step needed' && exit 0",
+    "vercel-build": "echo 'No build step needed' && exit 0"
   },
   "dependencies": {
     "cors": "^2.8.5",

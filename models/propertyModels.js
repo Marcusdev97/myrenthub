@@ -13,26 +13,26 @@ const PropertyModel = {
   },
 
   create: async function(newProperty) {
-    const { title, availableDate, rooms, bathrooms, location, name, price, tags, description, images, rented, sources, agent } = newProperty;
+    const { title, availableDate, sqm, rooms, bathrooms, project, name, price, tags, description, images, rented, sources, agent } = newProperty;
     const sql = `
       INSERT INTO properties 
-      (title, availableDate, rooms, bathrooms, location, name, price, tags, description, images, rented, sources, agent)
+      (title, availableDate, sqm, rooms, bathrooms, project, name, price, tags, description, images, rented, sources, agent)
       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     `;
-    const [result] = await db.query(sql, [title, availableDate, rooms, bathrooms, location, name, price, tags, description, images, rented, sources, agent]);
+    const [result] = await db.query(sql, [title, availableDate, sqm, rooms, bathrooms, project, name, price, tags, description, images, rented, sources, agent]);
     return result.insertId;
   },
 
   update: async function(id, updatedProperty) {
-    const { title, availableDate, rooms, bathrooms, location, name, price, tags, description, images, rented, sources, agent } = updatedProperty;
+    const { title, availableDate, sqm, rooms, bathrooms, project, name, price, tags, description, images, rented, sources, agent } = updatedProperty;
     const sql = `
       UPDATE properties SET 
-      title = ?, availableDate = ?, rooms = ?, bathrooms = ?, location = ?, 
+      title = ?, availableDate = ?, sqm, rooms = ?, bathrooms = ?, project = ?, 
       name = ?, price = ?, tags = ?, description = ?, images = ?, rented = ?,
       sources = ?, agent = ?
       WHERE id = ?
     `;
-    await db.query(sql, [title, availableDate, rooms, bathrooms, location, name, price, tags, description, images, rented, sources, agent, id]);
+    await db.query(sql, [title, availableDate, sqm, rooms, bathrooms, project, name, price, tags, description, images, rented, sources, agent, id]);
     return this.findById(id);
   },
 

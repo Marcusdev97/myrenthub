@@ -13,9 +13,10 @@ app.use(cors()); // Enable CORS for all routes
 // Configurations
 const db = require('./config/db');
 const propertyRoutes = require('./routes/propertyRoutes');
+const projectRoutes = require('./routes/projectRoutes');
 const agentRoutes = require('./routes/agentRoutes');
 const partnerRoutes = require('./routes/partnerRoutes');
-const rentedRoutes = require('./routes/rentedRoutes'); // New Rented Routes
+const rentedRoutes = require('./routes/rentedRoutes'); 
 
 // Middlewares
 app.use(express.static(path.join(__dirname, 'public')));
@@ -24,9 +25,10 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 app.use('/api/properties', propertyRoutes);
+app.use('/api/projects', projectRoutes);
 app.use('/api/agents', agentRoutes);
 app.use('/api/partners', partnerRoutes);
-app.use('/api/rented', rentedRoutes); // Add the new rented routes here
+app.use('/api/rented', rentedRoutes); 
 app.use('/fontawesome-free-6.6.0-web', express.static(path.join(__dirname, 'fontawesome-free-6.6.0-web')));
 
 // Serve HTML files

@@ -53,7 +53,7 @@ exports.getPropertyById = async (req, res) => {
 
 // Create a new property
 exports.createProperty = async (req, res) => {
-    const { title, availableDate, rooms, bathrooms, location, name, price, tags, description } = req.body;
+    const { title, availableDate, sqm, rooms, bathrooms, project, name, price, tags, description } = req.body;
     let sources = req.body.sources;
 
     if (typeof sources === 'string') {
@@ -66,7 +66,7 @@ exports.createProperty = async (req, res) => {
     const formattedTags = tags.split(';').map(tag => tag.trim());
 
     const property = { 
-        title, availableDate, rooms, bathrooms, location, name, price, 
+        title, availableDate, sqm, rooms, bathrooms, project, name, price, 
         tags: formattedTags.join(';'), description, 
         images: JSON.stringify(images), rented, 
         sources: JSON.stringify(sources)  // Store the partner object as a JSON string
@@ -84,10 +84,12 @@ exports.createProperty = async (req, res) => {
 // Update a property
 exports.updateProperty = async (req, res) => {
     const { id } = req.params;
-    const { rented, title, availableDate, rooms, bathrooms, location, name, price, tags, description, sources, agent } = req.body;
+    const { rented, title, availableDate, sqm, rooms, bathrooms, project, name, price, tags, description, sources, agent } = req.body;
 
+    console.log(id);
+    console.log(req.body);
     // Handle only the rented update
-    if (typeof rented !== 'undefined' && !title && !availableDate && !rooms && !bathrooms && !location && !name && !price && !tags && !description && !sources && !agent) {
+    if (typeof rented !== 'undefined' && !title && !availableDate && !sqm && !rooms && !bathrooms && !project && !name && !price && !tags && !description && !sources && !agent) {
         try {
             await db.query('UPDATE properties SET rented = ? WHERE id = ?', [rented, id]);
             res.status(200).send('Property status updated successfully');
@@ -108,7 +110,7 @@ exports.updateProperty = async (req, res) => {
         }
 
         const updatedProperty = {
-            title, availableDate, rooms, bathrooms, location, name, price,
+            title, availableDate, sqm, rooms, bathrooms, project, name, price,
             tags: tags ? tags.split(';').map(tag => tag.trim()).join(';') : undefined, description, rented: rented === 'true', images: JSON.stringify(images),
             sources, agent // Make sure agent is included in the update
         };

@@ -52,30 +52,21 @@
                 <label for="availableDate">Available Date</label>
                 <input type="date" id="availableDate" name="availableDate" required>
               </div>
-              <div class="form-group row">
-                <div class="form-group">
-                  <label for="rooms">Rooms</label>
-                  <input type="number" id="rooms" name="rooms" required>
-                </div>
-                <div class="form-group">
-                  <label for="bathrooms">Bathrooms</label>
-                  <input type="number" id="bathrooms" name="bathrooms" required>
-                </div>
+              <div class="form-group">
+                <label for="sqft">Size (sqft)</label>
+                <input type="number" id="sqft" name="sqft" placeholder="Size in sqft" required>
               </div>
               <div class="form-group">
-                <label for="location">Location</label>
-                <select id="location" name="location" required>
-                  <option value="" disabled selected>Select Location</option>
-                  <option value="SS13">SS13</option>
-                  <option value="SS15">SS15</option>
-                  <option value="CasaTiara">CasaTiara</option>
-                  <option value="IconCity">IconCity</option>
-                  <option value="Greenfield">Greenfield</option>
-                  <option value="GeoSense">GeoSense</option>
-                  <option value="GeoLake">GeoLake</option>
-                  <option value="Union">Union</option>
-                  <option value="Edumetro">Edumetro</option>
-                </select>
+                <label for="rooms">Rooms</label>
+                <input type="number" id="rooms" name="rooms" required>
+              </div>
+              <div class="form-group">
+                <label for="bathrooms">Bathrooms</label>
+                <input type="number" id="bathrooms" name="bathrooms" required>
+              </div>
+              <div class="form-group">
+                <label for="project">Location:</label>
+                <select id="project" name="project" required></select>
               </div>
               <div class="form-group">
                 <label for="name">Name</label>
@@ -104,7 +95,7 @@
                 <input type="file" id="images" name="images" multiple>
                 <div id="imagePreview"></div>
               </div>
-              <!-- Wrap the agent section in a div with id="agentSection" -->
+              <!-- Agent Section -->
               <div id="agentSection" class="form-group" style="display: none;">
                 <label for="agent">Agent Handle</label>
                 <select id="agent" name="agent">

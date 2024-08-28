@@ -13,23 +13,23 @@ const AgentModel = {
   },
 
   create: async function(newAgent) {
-    const { name, contact_info } = newAgent;
+    const { name, contact_info, qr_image } = newAgent;
     const sql = `
-      INSERT INTO agents (name, contact_info)
-      VALUES (?, ?)
+      INSERT INTO agents (name, contact_info, qr_image)
+      VALUES (?, ?, ?)
     `;
-    const [result] = await db.query(sql, [name, contact_info]);
+    const [result] = await db.query(sql, [name, contact_info, qr_image]);
     return result.insertId;
   },
 
   update: async function(agent_id, updatedAgent) {
-    const { name, contact_info } = updatedAgent;
+    const { name, contact_info, qr_image } = updatedAgent;
     const sql = `
       UPDATE agents SET 
-      name = ?, contact_info = ? 
+      name = ?, contact_info = ?, qr_image = ?
       WHERE agent_id = ?
     `;
-    await db.query(sql, [name, contact_info, agent_id]);
+    await db.query(sql, [name, contact_info, qr_image, agent_id]);
     return this.findById(agent_id);
   },
 

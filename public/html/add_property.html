@@ -33,23 +33,16 @@
             <div class="form-group">
               <input type="date" id="availableDate" name="availableDate" placeholder="Available date" required>
             </div>
+            <div class="form-group">
+              <input date="text" id="sqft" name="sqft" placeholder="Size" required>
+            </div>
             <div class="form-group row">
               <input type="text" id="rooms" name="rooms" placeholder="Rooms" required>
               <input type="text" id="bathrooms" name="bathrooms" placeholder="Bathrooms" required>
             </div>
-            <div class="form-group">
-              <select id="location" name="location" required>
-                <option value="" disabled selected>Select Location</option>
-                <option value="SS13">SS13</option>
-                <option value="SS15">SS15</option>
-                <option value="CasaTiara">CasaTiara</option>
-                <option value="IconCity">IconCity</option>
-                <option value="Greenfield">Greenfield</option>
-                <option value="GeoSense">GeoSense</option>
-                <option value="GeoLake">GeoLake</option>
-                <option value="Union">Union</option>
-                <option value="Edumetro">Edumetro</option>
-              </select>
+              <div class="form-group">
+                <label for="project">Location:</label>
+                <select id="project" name="project" required></select>
             </div>
             <div class="form-group">
               <input type="text" id="name" name="name" placeholder="Name" required>

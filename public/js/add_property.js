@@ -2,6 +2,7 @@
 
 document.addEventListener('DOMContentLoaded', async () => {
     const sourcesSelect = document.getElementById('sources');
+    const projectSelect = document.getElementById('project');
     const uploadForm = document.getElementById('uploadForm');
     const imagePreviewContainer = document.getElementById('imagePreviewContainer');
     const bufferingIndicator = document.getElementById('bufferingIndicator');
@@ -13,7 +14,6 @@ document.addEventListener('DOMContentLoaded', async () => {
         // Fetch partners
         const partnersResponse = await fetch('/api/partners');
         const partners = await partnersResponse.json();
-        console.log(partners);
         partners.forEach(partner => {
             const option = document.createElement('option');
             option.value = partner.partner_id; // Store only the ID in the value
@@ -21,8 +21,27 @@ document.addEventListener('DOMContentLoaded', async () => {
             sourcesSelect.add(option);
         });
     } catch (error) {
-        console.error('Error fetching sources:', error);
+        console.error('Error fetching sources: Partner Information', error);
     }
+
+    try {
+        const response = await fetch('/api/projects');
+        const projects = await response.json();
+    
+        // Ensure projects is an array
+        if (Array.isArray(projects)) {
+          projects.forEach(project => {
+            const option = document.createElement('option');
+            option.value = project.id;  // Use the project ID as the value
+            option.text = project.name;  // Display the project name
+            projectSelect.add(option);
+          });
+        } else {
+          console.error('Projects data is not an array:', projects);
+        }
+      } catch (error) {
+        console.error('Error fetching projects:', error);
+      }
 
     // Enable the upload button if all required inputs are filled
     if (requiredInputs) {
@@ -63,6 +82,12 @@ document.addEventListener('DOMContentLoaded', async () => {
             const formData = new FormData(uploadForm);
             const selectedPartnerId = sourcesSelect.value;
             const selectedPartner = partnersData.find(partner => partner.partner_id == selectedPartnerId);
+
+            const sqft = parseFloat(formData.get('sqft'));
+            if (!isNaN(sqft)) {
+              const sqm = (sqft * 0.092903).toFixed(2); 
+              formData.append('sqm', sqm);
+            }
             
             if (selectedPartner) {
                 formData.append('sources', JSON.stringify(selectedPartner)); // Store full partner object

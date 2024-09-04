@@ -2,7 +2,6 @@
 
 document.addEventListener('DOMContentLoaded', async () => {
     const sourcesSelect = document.getElementById('sources');
-    const projectSelect = document.getElementById('project');
     const uploadForm = document.getElementById('uploadForm');
     const imagePreviewContainer = document.getElementById('imagePreviewContainer');
     const bufferingIndicator = document.getElementById('bufferingIndicator');
@@ -23,26 +22,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     } catch (error) {
         console.error('Error fetching sources: Partner Information', error);
     }
-
-    try {
-        const response = await fetch('/api/projects');
-        const projects = await response.json();
     
-        // Ensure projects is an array
-        if (Array.isArray(projects)) {
-          projects.forEach(project => {
-            const option = document.createElement('option');
-            option.value = project.id;  // Use the project ID as the value
-            option.text = project.name;  // Display the project name
-            projectSelect.add(option);
-          });
-        } else {
-          console.error('Projects data is not an array:', projects);
-        }
-      } catch (error) {
-        console.error('Error fetching projects:', error);
-      }
-
     // Enable the upload button if all required inputs are filled
     if (requiredInputs) {
         requiredInputs.forEach(input => {

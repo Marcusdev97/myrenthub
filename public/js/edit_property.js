@@ -2,11 +2,9 @@ document.addEventListener('DOMContentLoaded', () => {
   const sourcesSelect = document.getElementById('sources');
   const agentSection = document.getElementById('agentSection');
   const agentSelect = document.getElementById('agent');
-  const projectSelect = document.getElementById('project');
 
   let partnersData = [];
   let agentsData = [];
-  let projectsData = [];
 
   const loadProperties = async () => {
     try {
@@ -74,29 +72,6 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   };
 
-  const loadProjects = async () => {
-    try {
-      const response = await fetch('/api/projects');
-      projectsData = await response.json();
-  
-      if (!Array.isArray(projectsData)) {
-        throw new Error('Expected projects to be an array');
-      }
-  
-      projectSelect.innerHTML = ''; // Clear existing options
-  
-      projectsData.forEach(project => {
-        const option = document.createElement('option');
-        option.value = project.id; // Use `id` as the value for matching
-        option.text = project.name; // Display name in the dropdown
-        projectSelect.appendChild(option);
-      });
-  
-    } catch (error) {
-      console.error('Failed to load projects:', error);
-    }
-  };
-
   const loadPartnersAndAgents = async () => {
     try {
       const partnersResponse = await fetch('/api/partners');
@@ -115,14 +90,24 @@ document.addEventListener('DOMContentLoaded', () => {
       const response = await fetch(`/api/properties/${id}`);
       const property = await response.json();
       if (!property) throw new Error('Property not found');
-
+  
       function convertSqmToSqft(sqm) {
         return (sqm / 0.092903).toFixed(2);  // 1 sqm = 10.7639 sqft (approx)
       }
-
+  
+      // Set form values
       document.getElementById('propertyId').value = property.id;
       document.getElementById('title').value = property.title;
       document.getElementById('availableDate').value = property.availableDate.split('T')[0];
+      
+      // Correctly set the value of the location select element
+      const locationSelect = document.getElementById('location');
+      if (property.location) {
+        locationSelect.value = property.location;
+      } else {
+        locationSelect.value = ""; // or a default value if location is undefined
+      }
+  
       document.getElementById('sqft').value = convertSqmToSqft(property.sqm); 
       document.getElementById('rooms').value = property.rooms;
       document.getElementById('bathrooms').value = property.bathrooms;
@@ -130,15 +115,8 @@ document.addEventListener('DOMContentLoaded', () => {
       document.getElementById('price').value = property.price;
       document.getElementById('tags').value = property.tags;
       document.getElementById('description').value = property.description;
-
-      // Find the project by matching the property project ID with the project ID
-      const selectedProject = projectsData.find(proj => proj.id === parseInt(property.project));
-      if (selectedProject) {
-        projectSelect.value = selectedProject.id; // Set the dropdown to the matching project ID
-      } else {
-        projectSelect.value = ''; // If not found, set to empty
-      }
-
+  
+      // Populate sources select
       sourcesSelect.innerHTML = '';
       partnersData.forEach(partner => {
         const option = document.createElement('option');
@@ -149,23 +127,24 @@ document.addEventListener('DOMContentLoaded', () => {
       if (property.sources && property.sources.partner_id) {
         sourcesSelect.value = property.sources.partner_id;
       }
-
+  
+      // Display agents if rented
       if (property.rented && !property.agent_id) {
         agentSection.style.display = 'block';
         agentSelect.innerHTML = '';
-
+  
         const defaultOption = document.createElement('option');
         defaultOption.value = '';
         defaultOption.text = 'Not Assigned Yet';
         agentSelect.add(defaultOption);
-
+  
         agentsData.forEach(agent => {
           const option = document.createElement('option');
           option.value = agent.agent_id;
           option.text = agent.name;
           agentSelect.add(option);
         });
-
+  
         if (property.agent_id) {
           agentSelect.value = property.agent_id;
         } else {
@@ -174,10 +153,11 @@ document.addEventListener('DOMContentLoaded', () => {
       } else {
         agentSection.style.display = 'none';
       }
-
+  
+      // Image handling
       const imagePreview = document.getElementById('imagePreview');
       imagePreview.innerHTML = '';
-
+  
       if (Array.isArray(property.images) && property.images.length > 0) {
         property.images.forEach(imageUrl => {
           const img = document.createElement('img');
@@ -186,13 +166,14 @@ document.addEventListener('DOMContentLoaded', () => {
           imagePreview.appendChild(img);
         });
       }
-
+  
       const editModal = document.getElementById('editModal');
       editModal.style.display = 'block';
     } catch (error) {
       console.error('Failed to open edit modal:', error);
     }
   };
+  
 
   const closeModal = () => {
     document.getElementById('editModal').style.display = 'none';
@@ -210,7 +191,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const availableDate = document.getElementById('availableDate').value;
     const rooms = document.getElementById('rooms').value;
     const bathrooms = document.getElementById('bathrooms').value;
-    const project = projectSelect.value; // Get the selected project ID
+    const location = document.getElementById('location').value;
     const name = document.getElementById('name').value;
     const price = document.getElementById('price').value;
     const sources = document.getElementById('sources').value;
@@ -233,7 +214,7 @@ document.addEventListener('DOMContentLoaded', () => {
     formData.append('availableDate', availableDate);
     formData.append('rooms', rooms);
     formData.append('bathrooms', bathrooms);
-    formData.append('project', project); // Ensure project ID is submitted
+    formData.append('location', location);
     formData.append('name', name);
     formData.append('price', price);
     formData.append('tags', tags);
@@ -284,8 +265,7 @@ document.addEventListener('DOMContentLoaded', () => {
   // Ensure all properties and data are loaded initially
   loadProperties();
   loadPartnersAndAgents();
-  loadProjects();
-  
+
   // Attach click event to open edit modal buttons dynamically
   document.getElementById('propertyList').addEventListener('click', (e) => {
     if (e.target.closest('.edit-button')) {

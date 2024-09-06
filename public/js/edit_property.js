@@ -92,7 +92,7 @@ document.addEventListener('DOMContentLoaded', () => {
       if (!property) throw new Error('Property not found');
   
       function convertSqmToSqft(sqm) {
-        return (sqm / 0.092903).toFixed(2);  // 1 sqm = 10.7639 sqft (approx)
+        return (sqm / 0.092903).toFixed(0);  // 1 sqm = 10.7639 sqft (approx)
       }
   
       // Set form values
@@ -168,6 +168,8 @@ document.addEventListener('DOMContentLoaded', () => {
       }
   
       const editModal = document.getElementById('editModal');
+      const deleteButton = document.getElementById('deleteButton');
+      deleteButton.onclick = () => handleDeleteProperty(id);
       editModal.style.display = 'block';
     } catch (error) {
       console.error('Failed to open edit modal:', error);
@@ -259,6 +261,33 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   };
 
+  const handleDeleteProperty = async (id) => {
+    if (!confirm('Are you sure you want to delete this property?')) {
+      return;  // User cancelled the deletion
+    }
+  
+    try {
+      const response = await fetch(`/api/properties/${id}`, {
+        method: 'DELETE'
+      });
+  
+      if (!response.ok) {
+        const errorText = await response.text();
+        throw new Error(`Failed to delete property: ${errorText}`);
+      }
+  
+      alert('Property deleted successfully!');
+      
+      // Close the modal and reload the properties list
+      closeModal();
+      loadProperties();
+  
+    } catch (error) {
+      alert(`An error occurred while deleting the property. ${error.message}`);
+    }
+  };
+  
+
   document.getElementById('editForm').addEventListener('submit', handleFormSubmit);
   document.getElementById('closeModal').addEventListener('click', closeModal);
 
@@ -274,7 +303,7 @@ document.addEventListener('DOMContentLoaded', () => {
     } else if (e.target.classList.contains('toggle-rented')) {
       const id = e.target.dataset.id;
       const rented = e.target.checked;
-      console.log(e.target);
+      handleDeleteProperty(id);
       handleRentedToggle(id, rented);
     }
   });

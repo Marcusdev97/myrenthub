@@ -17,15 +17,15 @@ document.addEventListener('DOMContentLoaded', () => {
             rentedProperties.forEach(property => {
                 const propertyCard = `
                     <div class="property-card">
-                        <h3>${property.title || 'Update Required'} - ${property.unit_number}</h3>
+                        <h3>${property.title} - ${property.unit_number}</h3>
                         <p><strong>Price:</strong> ${property.price}</p>
                         <p><strong>Agent:</strong> ${property.agent.name}</p>
                         <p><strong>Source:</strong> ${property.sources.name} - ${property.sources.company}</p>
-                        <p><strong>Check-In Date:</strong> ${property.check_in_date || 'Update Required'}</p>
-                        <p><strong>Tenancy Fees:</strong> ${property.tenancy_fees || 'Update Required'}</p>
-                        <p><strong>Balance:</strong> ${property.balance || 'Update Required'}</p>
-                        <p><strong>Internet Needed:</strong> ${property.internet_needed || 'Update Required'}</p>
-                        <p><strong>Remarks:</strong> ${property.remark || 'No remarks yet'}</p>
+                        <p><strong>Check-In Date:</strong> ${property.check_in_date}</p>
+                        <p><strong>Tenancy Fees:</strong> ${property.tenancy_fees}</p>
+                        <p><strong>Balance:</strong> ${property.balance}</p>
+                        <p><strong>Internet Needed:</strong> ${property.internet_needed}</p>
+                        <p><strong>Remarks:</strong> ${property.remark}</p>
                         <button class="view-details" data-id="${property.property_id}">
                             <i class="fa-solid fa-eye"></i> View Details
                         </button>
@@ -58,7 +58,41 @@ document.addEventListener('DOMContentLoaded', () => {
             if (!property || typeof property !== 'object') {
                 throw new Error('Invalid property data');
             }
-            
+            console.log(property.price);
+
+
+            // Set Rental Amount
+            document.getElementById('rental_amount').textContent = property.price;
+
+            console.log(document.getElementById('rental_amount')); // Check if it's null
+
+
+            // Calculate deposits if this is the first time loading the property
+            let securityDeposit = property.security_deposit || property.price * 2;
+            let securityUtilitiesDeposit = property.security_utilities_deposit || property.price * 0.5;
+
+            document.getElementById('security_deposit').value = securityDeposit.toFixed(2);
+            document.getElementById('security_utilities_deposit').value = securityUtilitiesDeposit.toFixed(2);
+
+            // Populate existing values for Access Card and Other
+            document.getElementById('access_card_deposit').value = property.access_card_deposit || '';
+            document.getElementById('other_deposit').value = property.other_deposit || '';
+
+            // Calculate total dynamically
+            const updateTotal = () => {
+                const accessCardDeposit = parseFloat(document.getElementById('access_card_deposit').value) || 0;
+                const otherDeposit = parseFloat(document.getElementById('other_deposit').value) || 0;
+                const total = securityDeposit + securityUtilitiesDeposit + accessCardDeposit + otherDeposit;
+                document.getElementById('total_deposit').textContent = total.toFixed(2);
+            };
+
+            // Update total whenever Access Card or Other Deposit changes
+            document.getElementById('access_card_deposit').addEventListener('input', updateTotal);
+            document.getElementById('other_deposit').addEventListener('input', updateTotal);
+
+            // Initialize total calculation
+            updateTotal();
+
             // Format the date to yyyy-MM-dd
             const formatDate = (dateString) => {
             if (!dateString) return '';
@@ -70,14 +104,14 @@ document.addEventListener('DOMContentLoaded', () => {
             };
             console.log(property);
             // Populate modal fields with the property details
-            document.getElementById('modalTitle').textContent = property.title || 'Property Details';
-            document.getElementById('unit_number').value = property.unit_number || '';
+            document.getElementById('modalTitle').textContent = property.title;
+            document.getElementById('unit_number').value = property.unit_number;
             document.getElementById('propertyId').value = property.property_id;
-            document.getElementById('check_in_date').value = formatDate(property.check_in_date) || '';
-            document.getElementById('tenancy_fees').value = property.tenancy_fees || '';
-            document.getElementById('balance').value = property.balance || '';
+            document.getElementById('check_in_date').value = formatDate(property.check_in_date);
+            document.getElementById('tenancy_fees').value = property.tenancy_fees;
+            document.getElementById('balance').value = property.balance;
             document.getElementById('internet_needed').checked = property.internet_needed || false;
-            document.getElementById('remark').value = property.remark || '';
+            document.getElementById('remark').value = property.remark;
 
             // Open the modal
             modal.style.display = 'flex';
@@ -103,7 +137,6 @@ document.addEventListener('DOMContentLoaded', () => {
         const remark = document.getElementById('remark').value;
 
         const updatedData = { check_in_date, unit_number, tenancy_fees, balance, internet_needed, remark };
-        console.log(updatedData);
 
         try {
             const response = await fetch(`/api/rented/${propertyId}`, {

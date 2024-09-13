@@ -190,122 +190,141 @@
       grid-template-columns: 1fr; /* 1 column on small screens */
   }
 }
-
-
-
-
 /* Centering the modal */
-.modal {
+.editModal {
   display: none;
-  align-items: center;
-  justify-content: center;
   position: fixed;
-  z-index: 1;
-  left: 0;
-  top: 0;
+  z-index: 1000;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  background-color: rgba(0, 0, 0, 0.5); /* Background overlay */
   width: 100%;
   height: 100%;
-  overflow: auto;
-  background-color: rgba(0, 0, 0, 0.5);
-}
-
-/* Modal Content Styling */
-.modal-content {
-  background-color: #ffffff;
-  padding: 40px 30px; /* Increased padding for better spacing */
-  border-radius: 10px;
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
-  max-width: 600px;
-  width: 90%;
-  margin: auto;
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-}
-
-/* Modal Form Sections */
-.modal-section {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 15px;
-  width: 100%;
-}
-
-.modal-title {
-  font-size: 1.5rem;
-  font-weight: bold;
-  text-align: center;
-  margin-bottom: 20px; /* Add some space below the title */
-  width: 100%; /* Ensure the title spans the full width */
-}
-
-.modal-section label {
-  font-size: 0.9rem;
-  font-weight: 600;
-  color: #333;
-  margin-bottom: 5px;
-  width: 100%; /* Ensure labels align well */
-}
-
-.modal-section input[type="text"],
-.modal-section input[type="date"],
-.modal-section textarea,
-.modal-section select {
-  width: 100%; /* Make all inputs full-width */
-  padding: 12px;
-  border-radius: 4px;
-  border: 1px solid #ddd;
-  font-size: 0.9rem;
-  box-sizing: border-box;
-}
-
-.modal-section textarea {
-  width: 100%;
-  resize: none;
-  height: 80px;
-}
-
-.checkbox-container {
-  display: flex;
+  justify-content: center;
   align-items: center;
-  gap: 10px; /* Spacing between label and checkbox */
-  width: 100%; /* Ensure full width for consistent layout */
+  overflow-y: auto; /* Allow the modal content to scroll */
 }
 
-.modal-section input[type="checkbox"] {
-  width: 18px;
-  height: 18px;
-  margin-right: 10px;
-  cursor: pointer;
+.editModal {
+  .modal {
+    display: none;
+    align-items: center;
+    justify-content: center;     
+    position: fixed;
+    z-index: 1;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+  }
+
+  .modal.show {
+      display: flex;
+  }
+
+  .modal-content {
+    background-color: #ffffff;
+    padding: 40px 30px;
+    border-radius: 10px;
+    max-width: 600px;
+    width: 90%;
+    max-height: 90%; /* Ensure the modal doesn’t exceed the screen height */
+    overflow-y: auto; /* Make modal content scrollable */
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+  }
+  
+  
+  /* Modal Form Sections */
+  .modal-section {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    width: 100%;
+  }
+  
+  .modal-title {
+    font-size: 1.5rem;
+    font-weight: bold;
+    text-align: center;
+    margin-bottom: 20px; /* Add some space below the title */
+    width: 100%; /* Ensure the title spans the full width */
+  }
+  
+  .modal-section label {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 5px;
+    width: 100%; /* Ensure labels align well */
+  }
+  
+  .modal-section input[type="text"],
+  .modal-section input[type="date"],
+  .modal-section textarea,
+  .modal-section select {
+    width: 100%; /* Make all inputs full-width */
+    padding: 12px;
+    border-radius: 4px;
+    border: 1px solid #ddd;
+    font-size: 0.9rem;
+    box-sizing: border-box;
+  }
+  
+  .modal-section textarea {
+    width: 100%;
+    resize: none;
+    height: 80px;
+  }
+  
+  .checkbox-container {
+    display: flex;
+    align-items: center;
+    gap: 10px; /* Spacing between label and checkbox */
+    width: 100%; /* Ensure full width for consistent layout */
+  }
+  
+  .modal-section input[type="checkbox"] {
+    width: 18px;
+    height: 18px;
+    margin-right: 10px;
+    cursor: pointer;
+  }
+  
+  /* Modal Buttons */
+  .modal-section button {
+    background-color: #007bff;
+    color: white;
+    padding: 12px 24px;
+    border: none;
+    border-radius: 4px;
+    font-size: 1rem;
+    cursor: pointer;
+    width: 100%;
+    margin-top: 20px;
+  }
+  
+  .modal-section button:hover {
+    background-color: #0056b3;
+  }
+  
+  /* Close Button */
+  .close {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    color: #333;
+    font-size: 1.5rem;
+    cursor: pointer;
+  }
+  
+  .close:hover {
+    color: #000;
+  }  
+
 }
 
-/* Modal Buttons */
-.modal-section button {
-  background-color: #007bff;
-  color: white;
-  padding: 12px 24px;
-  border: none;
-  border-radius: 4px;
-  font-size: 1rem;
-  cursor: pointer;
-  width: 100%;
-  margin-top: 20px;
-}
-
-.modal-section button:hover {
-  background-color: #0056b3;
-}
-
-/* Close Button */
-.close {
-  position: absolute;
-  top: 10px;
-  right: 10px;
-  color: #333;
-  font-size: 1.5rem;
-  cursor: pointer;
-}
-
-.close:hover {
-  color: #000;
+body.modal-open {
+  overflow: hidden;
 }

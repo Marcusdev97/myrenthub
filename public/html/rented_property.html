@@ -32,27 +32,29 @@
       </div>
 
     <!-- Modal structure -->
-    <div id="editModal" class="modal">
+    <div id="editModal" class="editModal">
       <div class="modal-content">
           <span class="close">&times;</span>
           <form id="editForm">
               <input type="hidden" id="propertyId" name="propertyId">
-    
+
               <div class="modal-section">
-                <h3 id="modalTitle" class="modal-title"></h3> 
+                  <h3 id="modalTitle" class="modal-title">Edit Property Details</h3>
+
+                  <!-- Removed 'for' since it's not associated with a form control -->
+                  <label>Rental Amount:</label>
+                  <span id="rental_amount"></span> <!-- Correctly used without 'for' -->
+
                   <label for="unit_number">Unit Number:</label>
                   <input type="text" id="unit_number" name="unit_number">
-
-                  <h3>Rental Amount = <span id="rental_amount"></span></h3>
-
 
                   <label for="move_in_date">Move-In Date:</label>
                   <input type="date" id="move_in_date" name="move_in_date">
 
                   <label for="security_deposit">Security Deposit:</label>
-                  <input type="text" id="security_deposit" name="security_deposit">
+                  <input type="text" id="security_deposit" name="security_deposit" readonly>
 
-                  <label for="security_utilities_deposit">Security Utiliies Deposit:</label>
+                  <label for="security_utilities_deposit">Security Utilities Deposit:</label>
                   <input type="text" id="security_utilities_deposit" name="security_utilities_deposit" readonly>
 
                   <label for="access_card_deposit">Access Card Deposit:</label>
@@ -61,13 +63,15 @@
                   <label for="other_deposit">Other (please indicate):</label>
                   <input type="text" id="other_deposit" name="other_deposit">
 
-                  <h3>Total: <span id="total_deposit" readonly></span></h3>
+                  <label for="special_condition">Special Condition:</label>
+                  <input type="text" id="special_condition" name="special_condition">
 
                   <label for="tenancy_fees">Tenancy Fees:</label>
                   <input type="text" id="tenancy_fees" name="tenancy_fees">
-  
+
+                  <h3>Total: <span id="total_deposit"></span></h3>
               </div>
-    
+
               <div class="modal-section">
                   <h3>Other Details</h3>
                   <div class="checkbox-container">
@@ -77,16 +81,15 @@
                   <label for="remark">Remarks:</label>
                   <textarea id="remark" name="remark"></textarea>
               </div>
-    
+
               <div class="modal-section" style="width: 100%; text-align: center;">
                   <button type="submit">Save</button>
               </div>
           </form>
       </div>
     </div>
-    
-    
-    
+
+
     </div>
   </div>
   <script src="/js/rented_property.js"></script>

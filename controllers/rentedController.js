@@ -2,29 +2,28 @@ const db = require('../config/db');
 
 exports.getRentedProperties = async (req, res) => {
     try {
-        // Query to get rented properties and related data
         const query = `
-                        SELECT 
-                        p.id AS property_id,
-                        p.title,
-                        p.name AS condo_name,
-                        p.price,
-                        p.sources,
-                        p.agent,
-                        COALESCE(r.unit_number, 'Update Required') AS unit_number,
-                        COALESCE(r.check_in_date, 'Update Required') AS check_in_date,
-                        COALESCE(r.tenancy_fees, 'Update Required') AS tenancy_fees,
-                        COALESCE(r.balance, 'Update Required') AS balance,
-                        COALESCE(r.internet_needed, 'Update Required') AS internet_needed,
-                        COALESCE(r.remark, 'No remarks yet') AS remark
-                    FROM
-                        properties p
-                    LEFT JOIN 
-                        rented_units r ON p.id = r.property_id
-                    WHERE 
-                        p.rented = 1 AND p.agent IS NOT NULL;
+            SELECT 
+                p.id AS property_id,
+                p.title,
+                p.name AS condo_name,
+                p.price,
+                p.sources,
+                p.agent,
+                r.unit_number,
+                r.check_in_date,
+                r.tenancy_fees,
+                r.balance,
+                r.internet_needed,
+                COALESCE(r.remark, 'No remarks yet') AS remark  -- You might want to keep 'No remarks yet'
+            FROM
+                properties p
+            LEFT JOIN 
+                rented_units r ON p.id = r.property_id
+            WHERE 
+                p.rented = 1 AND p.agent IS NOT NULL;
         `;
-
+        
         const [properties] = await db.query(query);
 
         // Fetching additional data for sources and agents

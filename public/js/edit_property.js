@@ -6,6 +6,12 @@ document.addEventListener('DOMContentLoaded', () => {
   let partnersData = [];
   let agentsData = [];
 
+  const formatDate = (dateString) => {
+    const date = new Date(dateString); // Convert to Date object
+    const options = { year: 'numeric', month: 'short', day: 'numeric' };
+    return date.toLocaleDateString('en-US', options); // Format the date
+};
+
   const loadProperties = async () => {
     try {
       const response = await fetch('/api/properties');
@@ -23,10 +29,9 @@ document.addEventListener('DOMContentLoaded', () => {
           : 'Partner: undefined - undefined';
 
         tr.innerHTML = `
-          <td>${property.id}</td>
           <td>${property.title}</td>
           <td>${property.name}</td>
-          <td>${property.tags}</td>
+          <td>${formatDate(property.availableDate)}</td>
           <td>${sourcesText}</td>
           <td class="actions">
             <button class="edit-button" data-id="${property.id}">

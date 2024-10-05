@@ -12,8 +12,12 @@ const RentedModel = {
       p.agent,
       r.unit_number AS unit_number,
       r.check_in_date AS check_in_date,
+      r.security_deposit AS security_deposit,
+      r.security_utilities_deposit AS security_utilities_deposit,
+      r.access_card_deposit AS access_card_deposit,
+      r.other_deposit AS other_deposit,
+      r.special_condition AS special_condition,
       r.tenancy_fees AS tenancy_fees,
-      r.balance AS balance,
       r.internet_needed AS internet_needed,
       r.remark AS remark
     FROM properties p

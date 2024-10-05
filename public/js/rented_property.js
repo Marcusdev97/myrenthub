@@ -1,54 +1,143 @@
 document.addEventListener('DOMContentLoaded', () => {
 
     const modal = document.getElementById('editModal');
-    const closeBtn = document.querySelector('.close');
 
-    // Helper function to format the date as "DD, Month (Time)"
-    const formatDate = (dateString) => {
-        // Check if the dateString is valid
-        const date = new Date(dateString);
-        if (isNaN(date.getTime())) {
-            // If the date is invalid, return "N/A"
-            return "N/A";
-        }
-        
-        const day = date.getDate().toString().padStart(2, '0');
-        const month = date.toLocaleString('default', { month: 'long' });
-        const time = date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-        
-        return `${day}, ${month} (${time})`;
+    // Helper function to format dates for display
+    const formatDateDisplay = (dateString) => {
+        if (!dateString) return "N/A";
+        const [datePart, timePart] = dateString.split(' ');
+        if (!datePart || !timePart) return "N/A";
+        // Simple format: 'DD/MM/YYYY HH:MM'
+        return `${datePart.split('-').reverse().join('/')} ${timePart.substring(0, 5)}`;
     };
 
-    // Function to load rented properties and add event listeners to the "View Details" button
+    // Helper function to format dates for input fields
+    const formatDateForInput = (dateString) => {
+        if (!dateString) return '';
+        const [datePart, timePart] = dateString.split(' ');
+        if (!datePart || !timePart) return '';
+        const timeWithoutSeconds = timePart.substring(0, 5); // 'HH:MM'
+        return `${datePart}T${timeWithoutSeconds}`;
+    }; 
+
+    // Helper function to parse float values safely
+    const parseInputValue = (inputId) => {
+        const value = document.getElementById(inputId).value;
+        return parseFloat(value) || 0;
+    };
+
+    // Helper function to set input values with defaults
+    const setInputValue = (id, value) => {
+        document.getElementById(id).value = value !== undefined ? value : 0;
+    };
+
+    // Function to update the total deposit
+    const updateTotal = () => {
+        const price = parseFloat(document.getElementById('rental_amount').textContent) || 0;
+        const securityDeposit = parseFloat((price * 2).toFixed(2));
+        const securityUtilitiesDeposit = parseFloat((price * 0.5).toFixed(2));
+
+        // Update calculated fields
+        document.getElementById('security_deposit').value = securityDeposit;
+        document.getElementById('security_utilities_deposit').value = securityUtilitiesDeposit;
+
+        // Parse other deposits
+        const accessCardDeposit = parseInputValue('access_card_deposit');
+        const otherDeposit = parseInputValue('other_deposit');
+        const specialCondition = parseInputValue('special_condition');
+        const tenancyFees = parseInputValue('tenancy_fees');
+
+        const total = securityDeposit + securityUtilitiesDeposit + accessCardDeposit + otherDeposit + specialCondition + tenancyFees;
+        document.getElementById('total_deposit').textContent = total.toFixed(2);
+    };
+
+    // Function to close the modal
+    const closeModal = () => {
+        modal.classList.remove('show');
+        modal.style.display = 'none';
+    };
+
+    // Function to open the edit modal
+    const openEditModal = async (id) => {
+        try {
+            const response = await fetch(`/api/rented/${id}`);
+            const property = await response.json();
+
+            if (!property || typeof property !== 'object') {
+                throw new Error('Invalid property data');
+            }
+
+            console.log('check_in_date from server:', property.check_in_date);
+
+            // Set values in the modal
+            document.getElementById('property_id').value = property.property_id;
+            document.getElementById('modalTitle').textContent = property.title || '';
+            document.getElementById('rental_amount').textContent = property.price || '';
+            document.getElementById('unit_number').value = property.unit_number || '';
+            document.getElementById('check_in_date').value = property.check_in_date ? formatDateForInput(property.check_in_date) : '';
+
+            // Calculate security deposits
+            const price = parseFloat(property.price) || 0;
+            const securityDeposit = parseFloat((price * 2).toFixed(2));
+            const securityUtilitiesDeposit = parseFloat((price * 0.5).toFixed(2));
+
+            // Set calculated security deposits
+            document.getElementById('security_deposit').value = securityDeposit;
+            document.getElementById('security_utilities_deposit').value = securityUtilitiesDeposit;
+
+            // Make these fields read-only
+            document.getElementById('security_deposit').readOnly = true;
+            document.getElementById('security_utilities_deposit').readOnly = true;
+
+            // Set other deposit values
+            setInputValue('access_card_deposit', parseFloat(property.access_card_deposit));
+            setInputValue('other_deposit', parseFloat(property.other_deposit));
+            setInputValue('special_condition', parseFloat(property.special_condition));
+            setInputValue('tenancy_fees', parseFloat(property.tenancy_fees));
+
+            document.getElementById('internet_needed').checked = property.internet_needed || false;
+            document.getElementById('remark').value = property.remark || '';
+
+            // Recalculate total deposits
+            updateTotal();
+
+            // Show the modal
+            modal.classList.add('show');
+            modal.style.display = 'flex';
+
+        } catch (error) {
+            console.error('Failed to open edit modal:', error);
+        }
+    };
+
+    // Function to load rented properties
     const loadRentedProperties = async () => {
         try {
             const response = await fetch('/api/rented');
             const rentedProperties = await response.json();
 
-            // Check if rentedProperties is an array and contains data
             if (!Array.isArray(rentedProperties) || rentedProperties.length === 0) {
                 console.error('No rented properties found.');
-                return;  // Exit early if no properties
+                return;
             }
 
             const rentedList = document.getElementById('rentedPropertyList');
-            rentedList.innerHTML = ''; // Clear the existing list
+            rentedList.innerHTML = '';
 
-            // Iterate over each property
             rentedProperties.forEach((property) => {
                 if (!property) {
                     console.warn('Invalid property data:', property);
-                    return;  // Skip invalid or undefined properties
-                }
+                    return;
+                }         
 
                 const propertyCard = `
                     <div class="property-card">
-                        <h3>${property.title || 'No Title'} - ${property.unit_number || 'No Unit Number'}</h3>
-                        <p><strong>Price:</strong> ${property.price || 'N/A'}</p>
-                        <p><strong>Agent:</strong> ${property.agent ? property.agent.name : 'N/A'}</p>
-                        <p><strong>Source:</strong> ${property.sources ? `${property.sources.name || 'N/A'} - ${property.sources.company || 'N/A'}` : 'N/A'}</p>
-                        <p><strong>Check-In Date:</strong> ${property.check_in_date ? formatDate(property.check_in_date) : 'N/A'}</p>
-                        <p><strong>Tenancy Fees:</strong> ${property.tenancy_fees || 'N/A'}</p>
+                        <h3>${property.title || 'No Title'} - ${property.unit_number || ''}</h3>
+                        <p><strong>Price:</strong> ${property.price || ''}</p>
+                        <p><strong>Agent:</strong> ${property.agent ? property.agent.name : ''}</p>
+                        <p><strong>Source:</strong> ${property.sources ? `${property.sources.name || ''} - ${property.sources.company || ''}` : ''}</p>
+                        <p><strong>Check-In Date:</strong> ${property.check_in_date ? formatDateDisplay(property.check_in_date) : ''}</p>
+                        <p><strong>Tenancy Fees:</strong> ${property.tenancy_fees || ''}</p>
                         <p><strong>Internet Needed:</strong> ${property.internet_needed ? 'Yes' : 'No'}</p>
                         <p><strong>Remarks:</strong> ${property.remark || 'No remarks yet'}</p>
                         <button class="view-details" data-id="${property.property_id}">
@@ -60,11 +149,11 @@ document.addEventListener('DOMContentLoaded', () => {
                 rentedList.innerHTML += propertyCard;
             });
 
-            // Add event listeners to all "View Details" buttons after the DOM update
+            // Add event listeners to "View Details" buttons
             document.querySelectorAll('.view-details').forEach(button => {
                 button.addEventListener('click', (event) => {
                     const propertyId = event.currentTarget.dataset.id;
-                    openEditModal(propertyId); // Open modal only when "View Details" is clicked
+                    openEditModal(propertyId);
                 });
             });
 
@@ -73,111 +162,64 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     };
 
-
-    // Function to open the modal and populate it with property data
-    const openEditModal = async (id) => {
-        try {
-            const response = await fetch(`/api/rented/${id}`);
-            const property = await response.json();
-
-            if (!property || typeof property !== 'object') {
-                throw new Error('Invalid property data');
-            }
-
-            const formattedDate = formatDate(property.check_in_date);
-
-            // Set values in the modal
-            document.getElementById('modalTitle').textContent = `${property.title}`;
-            document.getElementById('rental_amount').textContent = property.price || '';
-            document.getElementById('unit_number').value = property.unit_number || '';
-            document.getElementById('move_in_date').value = formattedDate; // Use the formatted date here
-            document.getElementById('security_deposit').value = parseFloat(property.security_deposit || (property.price * 2).toFixed(2));
-            document.getElementById('security_utilities_deposit').value = parseFloat(property.security_utilities_deposit || (property.price * 0.5).toFixed(2));
-            document.getElementById('access_card_deposit').value = parseFloat(property.access_card_deposit || 0);
-            document.getElementById('other_deposit').value = parseFloat(property.other_deposit || 0);
-            document.getElementById('tenancy_fees').value = parseFloat(property.tenancy_fees || 0);
-            document.getElementById('special_condition').value = parseFloat(property.special_condition || 0);
-            document.getElementById('internet_needed').checked = property.internet_needed || false;
-            document.getElementById('remark').value = property.remark || '';
-
-            // Recalculate total deposits
-            updateTotal();
-
-            // Show the modal
-            modal.classList.add('show');
-            modal.style.display = 'flex';  // Ensure modal shows as flexbox (centered)
-
-        } catch (error) {
-            console.error('Failed to open edit modal:', error);
-        }
-    };
-
-    // Function to update the total deposit
-    const updateTotal = () => {
-        const securityDeposit = parseFloat(document.getElementById('security_deposit').value) || 0;
-        const securityUtilitiesDeposit = parseFloat(document.getElementById('security_utilities_deposit').value) || 0;
-        const accessCardDeposit = parseFloat(document.getElementById('access_card_deposit').value) || 0;
-        const otherDeposit = parseFloat(document.getElementById('other_deposit').value) || 0;
-        const specialCondition = parseFloat(document.getElementById('special_condition').value) || 0;
-        const tenancyFees = parseFloat(document.getElementById('tenancy_fees').value) || 0;
-        const total = securityDeposit + securityUtilitiesDeposit + accessCardDeposit + otherDeposit + specialCondition + tenancyFees;
-        document.getElementById('total_deposit').textContent = total.toFixed(2);
-    };
-
-    // Function to close the modal
-    const closeModal = () => {
-        const modal = document.getElementById('editModal');
-        modal.classList.remove('show');
-        modal.style.display = 'none'; // Hide the modal
-    };
-
-    // Close modal when clicking outside of it
-    window.addEventListener('click', (event) => {
-        const modal = document.getElementById('editModal');
-        if (event.target === modal) {
-            closeModal();
-        }
-    });
-    
-
-    // Form submit handler to update property details
+    // Form Handler
     const handleFormSubmit = async (e) => {
         e.preventDefault();
-
-        const propertyId = document.getElementById('propertyId').value;
-        const unit_number = document.getElementById('unit_number').value;
-        const check_in_date = document.getElementById('check_in_date').value;
-        const tenancy_fees = document.getElementById('tenancy_fees').value;
-        const internet_needed = document.getElementById('internet_needed').checked;
-        const remark = document.getElementById('remark').value;
-
-        const updatedData = { check_in_date, unit_number, tenancy_fees, internet_needed, remark };
-
+    
+        const propertyId = document.getElementById('property_id').value;
+    
+        // Get the value from the datetime-local input
+        const checkInDateValue = document.getElementById('check_in_date').value;  // 'YYYY-MM-DDTHH:MM'
+    
+        // Convert it to 'YYYY-MM-DD HH:MM:SS' format
+        const formattedCheckInDate = checkInDateValue.replace('T', ' ') + ':00';
+    
+        const updatedData = {
+            unit_number: document.getElementById('unit_number').value,
+            check_in_date: formattedCheckInDate,
+            tenancy_fees: parseInputValue('tenancy_fees'),
+            internet_needed: document.getElementById('internet_needed').checked,
+            remark: document.getElementById('remark').value,
+            security_deposit: parseInputValue('security_deposit'),
+            security_utilities_deposit: parseInputValue('security_utilities_deposit'),
+            access_card_deposit: parseInputValue('access_card_deposit'),
+            other_deposit: parseInputValue('other_deposit'),
+            special_condition: parseInputValue('special_condition')
+        };
+    
         try {
             const response = await fetch(`/api/rented/${propertyId}`, {
                 method: 'PATCH',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
+                headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(updatedData)
             });
-
+    
             if (!response.ok) {
                 throw new Error('Failed to update property');
             }
-
+    
             alert('Property updated successfully!');
-            closeModal();  // Close modal after successful update
-            loadRentedProperties(); // Reload the list of properties
-
+            closeModal();
+            loadRentedProperties();
+    
         } catch (error) {
             alert(`An error occurred: ${error.message}`);
         }
     };
-
-    // Attach form submit handler
+    
+    // Attach event listeners
     document.querySelector('.close').addEventListener('click', closeModal);
     document.getElementById('editForm').addEventListener('submit', handleFormSubmit);
+
+    ['access_card_deposit', 'other_deposit', 'special_condition', 'tenancy_fees'].forEach(id => {
+        document.getElementById(id).addEventListener('input', updateTotal);
+    });
+
+    window.addEventListener('click', (event) => {
+        if (event.target === modal) {
+            closeModal();
+        }
+    });
 
     // Initial load of rented properties
     loadRentedProperties();

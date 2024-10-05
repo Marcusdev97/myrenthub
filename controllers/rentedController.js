@@ -1,5 +1,20 @@
 const db = require('../config/db');
 
+const formatDateForDatabase = (dateString) => {
+    if (!dateString) return null;
+    const date = new Date(dateString);
+    if (isNaN(date.getTime())) return null;
+    // Format as 'YYYY-MM-DD HH:MM:SS'
+    const year = date.getFullYear();
+    const month = (`0${date.getMonth() + 1}`).slice(-2);
+    const day = (`0${date.getDate()}`).slice(-2);
+    const hours = (`0${date.getHours()}`).slice(-2);
+    const minutes = (`0${date.getMinutes()}`).slice(-2);
+    const seconds = '00';  // Since we don't have seconds from the input
+    return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+};
+
+
 exports.getRentedProperties = async (req, res) => {
     try {
         const query = `
@@ -13,9 +28,8 @@ exports.getRentedProperties = async (req, res) => {
                 r.unit_number,
                 r.check_in_date,
                 r.tenancy_fees,
-                r.balance,
                 r.internet_needed,
-                COALESCE(r.remark, 'No remarks yet') AS remark  -- You might want to keep 'No remarks yet'
+                COALESCE(r.remark, 'No remarks yet') AS remark
             FROM
                 properties p
             LEFT JOIN 
@@ -55,7 +69,7 @@ exports.getRentedProperties = async (req, res) => {
 };
 
 exports.getRentedPropertyById = async (req, res) => {
-    try {
+     try {
         const propertyId = req.params.id;
         const query = `
             SELECT 
@@ -67,8 +81,12 @@ exports.getRentedPropertyById = async (req, res) => {
                 p.agent,
                 r.unit_number,
                 r.check_in_date,
+                r.security_deposit,
+                r.security_utilities_deposit,
+                r.access_card_deposit,
+                r.other_deposit,
+                r.special_condition,
                 r.tenancy_fees,
-                r.balance,
                 r.internet_needed,
                 r.remark
             FROM 
@@ -84,9 +102,11 @@ exports.getRentedPropertyById = async (req, res) => {
             return res.status(404).json({ error: 'Property not found' });
         }
 
+        // Fetch source details
         const [sourceResults] = await db.query('SELECT * FROM partners WHERE partner_id = ?', [property[0].sources]);
         property[0].sources = sourceResults.length > 0 ? sourceResults[0] : { name: 'undefined', company: 'undefined' };
 
+        // Fetch agent details
         const [agentResults] = await db.query('SELECT * FROM agents WHERE agent_id = ?', [property[0].agent]);
         property[0].agent = agentResults.length > 0 ? agentResults[0].name : 'undefined';
 
@@ -99,34 +119,51 @@ exports.getRentedPropertyById = async (req, res) => {
 
 exports.updateRentedUnit = async (req, res) => {
     const { id } = req.params;
-    const { unit_number, check_in_date, tenancy_fees, balance, internet_needed, remark } = req.body;
+    const {
+        unit_number,
+        check_in_date,
+        security_deposit,
+        security_utilities_deposit,
+        access_card_deposit,
+        other_deposit,
+        special_condition,
+        tenancy_fees,
+        internet_needed,
+        remark
+    } = req.body;
+
+    const formattedCheckInDate = formatDateForDatabase(check_in_date);
 
     try {
-        // Log incoming data
-        console.log('Updating rented unit with data:', { id, unit_number, check_in_date, tenancy_fees, balance, internet_needed, remark });
-
-        // Check the current state of the property in the database
-        const [currentData] = await db.query('SELECT * FROM rented_units WHERE property_id = ?', [id]);
-        console.log('Current data in DB:', currentData);
-
-        if (currentData.length === 0) {
-            return res.status(404).json({ error: 'Property not found' });
-        }
-
         const query = `
             UPDATE rented_units 
             SET 
                 unit_number = ?,
                 check_in_date = ?, 
+                security_deposit = ?,
+                security_utilities_deposit = ?, 
+                access_card_deposit = ?, 
+                other_deposit = ?, 
+                special_condition = ?,
                 tenancy_fees = ?, 
-                balance = ?, 
                 internet_needed = ?, 
                 remark = ? 
             WHERE 
                 property_id = ?;
         `;
-        const [result] = await db.query(query, [unit_number, check_in_date, tenancy_fees, balance, internet_needed, remark, id]);
-        console.log('Database update result:', result);
+        const [result] = await db.query(query, [
+            unit_number,
+            formattedCheckInDate,  // Use the formatted date here
+            security_deposit,
+            security_utilities_deposit,
+            access_card_deposit,
+            other_deposit,
+            special_condition,
+            tenancy_fees,
+            internet_needed,
+            remark,
+            id
+        ]);
 
         if (result.affectedRows === 0) {
             return res.status(404).json({ error: 'Property not found or no changes made' });
@@ -138,3 +175,5 @@ exports.updateRentedUnit = async (req, res) => {
         res.status(500).json({ error: 'Internal Server Error', details: error.message });
     }
 };
+
+

@@ -5,13 +5,20 @@ const bodyParser = require('body-parser');
 const cors = require('cors');
 const app = express();
 const port = process.env.PORT || 8080;
+const https = require('https');
+const fs = require('fs');
 
 
 // Middleware for CORS
 app.use(cors({
-  origin: 'https://myeasyrenthub.com', // Your frontend's development server
+  origin: 'https://myeasyrenthub.com',
   credentials: true
 }));
+
+const options = {
+  key: fs.readFileSync('/path/to/your/private.key'),
+  cert: fs.readFileSync('/path/to/your/certificate.crt')
+};
 
 // Database connection
 const db = require('./config/db');
@@ -65,7 +72,6 @@ app.get('/rented_property.html', (req, res) => {
 app.listen(port, () => {
   console.log(`Server is running on http://localhost:${port}`);
 });
-
 
 //Test Database Connections for Tencent
 db.getConnection()

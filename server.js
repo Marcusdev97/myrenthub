@@ -9,7 +9,7 @@ const port = process.env.PORT || 8080;
 
 // Middleware for CORS
 app.use(cors({
-  origin: 'https://myeasyrenthub.com', // Your frontend domain
+  origin: 'https://myeasyrenthub.com', // Your frontend's development server
   credentials: true
 }));
 

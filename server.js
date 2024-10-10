@@ -8,7 +8,10 @@ const port = process.env.PORT || 8080;
 
 
 // Middleware for CORS
-app.use(cors());
+app.use(cors({
+  origin: 'https://myeasyrenthub.com', // Your frontend domain
+  credentials: true
+}));
 
 // Database connection
 const db = require('./config/db');
@@ -32,6 +35,10 @@ app.use('/api/agents', agentRoutes);
 app.use('/api/partners', partnerRoutes);
 app.use('/api/rented', rentedRoutes);
 app.use('/fontawesome-free-6.6.0-web', express.static(path.join(__dirname, 'fontawesome-free-6.6.0-web')));
+
+app.get('/api/health', (req, res) => {
+  res.json({ status: 'API is working' });
+});
 
 // Serve HTML files
 app.get('/', (req, res) => {

@@ -6,7 +6,7 @@ console.log(`Connecting to database at ${process.env.DB_HOST}:${process.env.DB_P
 let sslOptions = null;
 if (process.env.DB_SSL === 'true') {
   sslOptions = {
-    // SSL options would be included here if needed in the future
+    rejectUnauthorized: false
   };
 }
 

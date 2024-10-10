@@ -46,6 +46,7 @@ module.exports = async (req, res) => {
         }
         
         const property = propertyResults[0];
+        console.log('running properties api', property);
         property.images = JSON.parse(property.images);  // 将 images 字段解析为 JSON 数组
 
         // 获取 sources 相关的 partner 信息

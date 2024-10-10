@@ -308,7 +308,6 @@ document.addEventListener('DOMContentLoaded', () => {
     } else if (e.target.classList.contains('toggle-rented')) {
       const id = e.target.dataset.id;
       const rented = e.target.checked;
-      handleDeleteProperty(id);
       handleRentedToggle(id, rented);
     }
   });

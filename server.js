@@ -6,11 +6,27 @@ const cors = require('cors');
 const app = express();
 const port = process.env.PORT || 8080;
 
-// Middleware for CORS
-app.use(cors({
-  origin: 'https://myeasyrenthub.com',
-  credentials: true
-}));
+// Improved CORS Configuration
+const allowedOrigins = [
+  'http://localhost:3000', // For local development
+  'https://myeasyrenthub.com' // For production
+];
+
+const corsOptions = {
+  origin: (origin, callback) => {
+    if (allowedOrigins.indexOf(origin) !== -1 || !origin) {
+      // Allow requests from allowed origins or no origin (e.g., Postman)
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
+  methods: ['GET', 'POST', 'OPTIONS'],
+  credentials: true,
+};
+
+// Apply CORS Middleware
+app.use(cors(corsOptions));
 
 // Database connection
 const db = require('./config/db');

@@ -8,7 +8,7 @@ const cors = Cors({
   credentials: true,
 });
 
-// Run middleware helper function
+// Middleware helper for running CORS
 function runMiddleware(req, res, fn) {
   return new Promise((resolve, reject) => {
     fn(req, res, (result) => {
@@ -38,40 +38,32 @@ module.exports = async (req, res) => {
 
   const { id } = req.query;
 
-  if (req.method === 'GET') {
-    try {
-      const connection = await mysql.createConnection({
-        host: process.env.DB_HOST,
-        user: process.env.DB_USER,
-        password: process.env.DB_PASS,
-        database: process.env.DB_NAME,
-        port: process.env.DB_PORT,
-      });
+  try {
+    // Setup database connection
+    const connection = await mysql.createConnection({
+      host: process.env.DB_HOST,
+      user: process.env.DB_USER,
+      password: process.env.DB_PASS,
+      database: process.env.DB_NAME,
+      port: process.env.DB_PORT,
+    });
 
+    if (req.method === 'GET') {
       if (id) {
         // Fetch single property by ID
         const [propertyResults] = await connection.execute('SELECT * FROM properties WHERE id = ?', [id]);
-        
-        // Log the property data for debugging
-        console.log('Property with ID:', id, 'Data:', propertyResults);
 
         if (propertyResults.length === 0) {
           return res.status(404).json({ error: 'Property not found' });
         }
-        
+
         const property = propertyResults[0];
 
-        // Parse images as JSON, with error handling
-        try {
-          property.images = JSON.parse(property.images).map((image) => {
-            return `${process.env.IMAGE_BASE_URL || req.protocol + '://' + req.get('host')}/uploads/${image}`;
-          });
-        } catch (e) {
-          console.error('Error parsing images:', e);
-          property.images = [];
-        }
+        // Fetch images for the property from the images table
+        const [imageResults] = await connection.execute('SELECT image_url FROM images WHERE property_id = ?', [id]);
+        property.images = imageResults.map(img => img.image_url);  // Use image URLs from the images table
 
-        // Fetch partner details related to property sources
+        // Fetch associated partner details
         const [partnerResults] = await connection.execute('SELECT * FROM partners WHERE partner_id = ?', [property.sources]);
         property.sources = partnerResults.length > 0 ? partnerResults[0] : null;
 
@@ -82,43 +74,30 @@ module.exports = async (req, res) => {
         // Fetch all properties
         const [propertyResults] = await connection.execute(getPropertiesQuery());
 
-        // Log results for debugging
-        if (process.env.NODE_ENV === 'development') {
-          console.log('Fetched Properties:', propertyResults);
-        }
+        // Map through properties to attach partner info and fetch images
+        const propertiesWithImagesAndPartners = await Promise.all(propertyResults.map(async (property) => {
+          // Fetch images for each property from the images table
+          const [imageResults] = await connection.execute('SELECT image_url FROM images WHERE property_id = ?', [property.id]);
+          property.images = imageResults.map(img => img.image_url);
 
-        const propertiesWithPartners = await Promise.all(propertyResults.map(async (property) => {
-          // Parse images as JSON, with error handling
-          try {
-            property.images = JSON.parse(property.images).map((image) => {
-              return `${process.env.IMAGE_BASE_URL || req.protocol + '://' + req.get('host')}/uploads/${image}`;
-            });
-          } catch (e) {
-            console.error('Error parsing images:', e);
-            property.images = [];
-          }
-
+          // Fetch partner info
           const [partnerResults] = await connection.execute('SELECT * FROM partners WHERE partner_id = ?', [property.sources]);
           property.sources = partnerResults.length > 0 ? partnerResults[0] : { name: 'undefined', company: 'undefined' };
+
           return property;
         }));
 
-        // Log final properties with partner data
-        if (process.env.NODE_ENV === 'development') {
-          console.log('Properties with Partner Info:', propertiesWithPartners);
-        }
-
         res.setHeader('Content-Type', 'application/json');
-        res.json(propertiesWithPartners);
+        res.json(propertiesWithImagesAndPartners);
       }
 
-      await connection.end(); // Close connection
-    } catch (error) {
-      console.error('Database query error:', error);
-      res.status(500).json({ error: 'Internal Server Error', details: error.message });
+      await connection.end(); // Close database connection
+    } else {
+      res.setHeader('Allow', ['GET']);
+      res.status(405).end(`Method ${req.method} Not Allowed`);
     }
-  } else {
-    res.setHeader('Allow', ['GET']);
-    res.status(405).end(`Method ${req.method} Not Allowed`);
+  } catch (error) {
+    console.error('Database query error:', error);
+    res.status(500).json({ error: 'Internal Server Error', details: error.message });
   }
 };

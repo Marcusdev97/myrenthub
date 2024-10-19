@@ -1,22 +1,15 @@
-// controllers/propertyController.js
 const db = require('../config/db');
+const PropertyModel = require('../models/propertyModels');
 
-// Get all properties with partner details
+// 获取所有没有 agent 的属性及其合作伙伴详情
 exports.getAllProperties = async (req, res) => {
     try {
-        // Fetch properties without an assigned agent
-        const [propertyResults] = await db.query('SELECT * FROM properties WHERE agent IS NULL');
-        
-        const propertiesWithPartners = await Promise.all(propertyResults.map(async (property) => {
-            const [partnerResults] = await db.query('SELECT * FROM partners WHERE partner_id = ?', [property.sources]);
-            if (partnerResults.length > 0) {
-                property.sources = partnerResults[0];
-            } else {
-                property.sources = { name: 'undefined', company: 'undefined' };
-            }
+        const [properties] = await db.query('SELECT * FROM properties WHERE agent IS NULL');
+        const propertiesWithPartners = await Promise.all(properties.map(async (property) => {
+            const [partners] = await db.query('SELECT * FROM partners WHERE partner_id = ?', [property.sources]);
+            property.sources = partners.length > 0 ? partners[0] : { name: 'undefined', company: 'undefined' };
             return property;
         }));
-
         res.json(propertiesWithPartners);
     } catch (error) {
         console.error('Error fetching properties:', error);
@@ -24,26 +17,15 @@ exports.getAllProperties = async (req, res) => {
     }
 };
 
-// Get a property by ID
+// 获取指定 ID 的属性
 exports.getPropertyById = async (req, res) => {
     const { id } = req.params;
     try {
-        const [propertyResults] = await db.query('SELECT * FROM properties WHERE id = ?', [id]);
-        if (propertyResults.length === 0) {
+        const [properties] = await db.query('SELECT * FROM properties WHERE id = ?', [id]);
+        if (properties.length === 0) {
             return res.status(404).json({ error: 'Property not found' });
         }
-        
-        const property = propertyResults[0];
-        property.images = JSON.parse(property.images);  // Parse images as JSON array
-
-        // Fetch the partner details using the sources ID
-        const [partnerResults] = await db.query('SELECT * FROM partners WHERE partner_id = ?', [property.sources]);
-        if (partnerResults.length > 0) {
-            property.sources = partnerResults[0]; // Replace sources ID with the partner object
-        } else {
-            property.sources = null; // If partner not found, return null
-        }
-
+        const property = properties[0];
         res.json(property);
     } catch (error) {
         console.error('Error fetching property:', error);
@@ -51,44 +33,36 @@ exports.getPropertyById = async (req, res) => {
     }
 };
 
-// Create a new property
+// 创建一个新属性
 exports.createProperty = async (req, res) => {
-    const { title, availableDate, sqm, rooms, bathrooms, location, name, price, tags, description } = req.body;
-    let sources = req.body.sources;
-
-    if (typeof sources === 'string') {
-        sources = JSON.parse(sources); // Parse the partner object if it's a string
-    }
-
-    const images = req.files.map(file => '/uploads/' + file.filename); 
+    const { title, availableDate, sqm, rooms, bathrooms, location, name, price, tags, description, sources } = req.body;
     const rented = false;
 
-    const formattedTags = tags.split(';').map(tag => tag.trim());
+    // 确保 tags 和 sources 有值
+    const formattedTags = tags ? tags.split(';').map(tag => tag.trim()).join(';') : '';
+    const formattedSources = sources ? JSON.stringify(sources) : '';
 
-    const property = { 
+    const newProperty = { 
         title, availableDate, sqm, rooms, bathrooms, location, name, price, 
-        tags: formattedTags.join(';'), description, 
-        images: JSON.stringify(images), rented, 
-        sources: JSON.stringify(sources)  // Store the partner object as a JSON string
+        tags: formattedTags, 
+        description, rented, sources: formattedSources
     };
 
     try {
-        await db.query('INSERT INTO properties SET ?', property);
-        res.status(200).send('Property uploaded successfully');
+        const propertyId = await PropertyModel.create(newProperty);
+        res.status(200).json({ id: propertyId, message: `Property uploaded successfully with ID: ${propertyId}` });
     } catch (error) {
-        console.error('Error inserting property:', error);
-        res.status(500).send({ error: 'Error inserting property', details: error.message });
+        console.error('Error creating property:', error);
+        res.status(500).json({ error: 'Failed to create property', details: error.message });
     }
 };
 
-// Update a property
+// 更新现有属性
 exports.updateProperty = async (req, res) => {
     const { id } = req.params;
     const { rented, title, availableDate, sqm, rooms, bathrooms, location, name, price, tags, description, sources, agent } = req.body;
 
-    console.log(id);
-    console.log(req.body);
-    // Handle only the rented update
+    // 如果仅更新 'rented' 状态
     if (typeof rented !== 'undefined' && !title && !availableDate && !sqm && !rooms && !bathrooms && !location && !name && !price && !tags && !description && !sources && !agent) {
         try {
             await db.query('UPDATE properties SET rented = ? WHERE id = ?', [rented, id]);
@@ -100,26 +74,27 @@ exports.updateProperty = async (req, res) => {
         return;
     }
 
-    // Handle full property update
+    // 完整更新属性
     try {
-        let images = req.files ? req.files.map(file => '/uploads/' + file.filename) : [];
-
-        if (req.body.existingImages) {
-            const existingImages = JSON.parse(req.body.existingImages);
-            images = images.concat(existingImages); // Combine new and existing images
-        }
-
         const updatedProperty = {
-            title, availableDate, sqm, rooms, bathrooms, location, name, price,
-            tags: tags ? tags.split(';').map(tag => tag.trim()).join(';') : undefined, description, rented: rented === 'true', images: JSON.stringify(images),
-            sources, agent // Make sure agent is included in the update
+            title,
+            availableDate,
+            sqm,
+            rooms,
+            bathrooms,
+            location,
+            name,
+            price,
+            tags: tags ? tags.split(';').map(tag => tag.trim()).join(';') : undefined,
+            description,
+            rented: rented === 'true',
+            sources,
+            agent
         };
 
-        // Remove undefined properties
+        // 移除未定义的属性，避免更新它们
         Object.keys(updatedProperty).forEach(key => {
-            if (updatedProperty[key] === undefined) {
-                delete updatedProperty[key];
-            }
+            if (updatedProperty[key] === undefined) delete updatedProperty[key];
         });
 
         await db.query('UPDATE properties SET ? WHERE id = ?', [updatedProperty, id]);
@@ -130,43 +105,20 @@ exports.updateProperty = async (req, res) => {
     }
 };
 
-// Delete a property
+// 删除一个属性
 exports.deleteProperty = async (req, res) => {
     const { id } = req.params;
 
     try {
-        const [results] = await db.query('DELETE FROM properties WHERE id = ?', [id]);
-        if (results.affectedRows === 0) {
-            res.status(404).send('Property not found');
-        } else {
-            res.status(200).send('Property deleted successfully!');
+        // 删除数据库中的属性
+        const [deleteResults] = await db.query('DELETE FROM properties WHERE id = ?', [id]);
+        if (deleteResults.affectedRows === 0) {
+            return res.status(404).send('Property not found');
         }
+
+        res.status(200).send('Property deleted successfully!');
     } catch (error) {
         console.error('Error deleting property:', error);
         res.status(500).send({ error: 'Internal Server Error', details: error.message });
     }
 };
-
-// Fetch all agents
-exports.getAllAgents = async (req, res) => {
-    try {
-        const [results] = await db.query('SELECT * FROM agents');
-        res.json(results);
-    } catch (error) {
-        console.error('Error fetching agents:', error);
-        res.status(500).json({ error: 'Internal Server Error', details: error.message });
-    }
-};
-
-// Fetch all partners
-exports.getAllPartners = async (req, res) => {
-    try {
-        const [results] = await db.query('SELECT * FROM partners');
-        res.json(results);
-    } catch (error) {
-        console.error('Error fetching partners:', error);
-        res.status(500).json({ error: 'Internal Server Error', details: error.message });
-    }
-};
-
-

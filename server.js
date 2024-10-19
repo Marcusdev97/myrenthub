@@ -12,20 +12,13 @@ const allowedOrigins = [
   'https://myeasyrenthub.com' // For production
 ];
 
+// Simplified CORS setup
 const corsOptions = {
-  origin: (origin, callback) => {
-    if (allowedOrigins.indexOf(origin) !== -1 || !origin) {
-      // Allow requests from allowed origins or no origin (e.g., Postman)
-      callback(null, true);
-    } else {
-      callback(new Error('Not allowed by CORS'));
-    }
-  },
+  origin: ['http://localhost:3000', 'https://myeasyrenthub.com'],
   methods: ['GET', 'POST', 'OPTIONS'],
   credentials: true,
 };
 
-// Apply CORS Middleware
 app.use(cors(corsOptions));
 
 // Database connection
@@ -43,12 +36,14 @@ const projectRoutes = require('./routes/projectRoutes');
 const agentRoutes = require('./routes/agentRoutes');
 const partnerRoutes = require('./routes/partnerRoutes');
 const rentedRoutes = require('./routes/rentedRoutes');
+const imageRoutes = require('./routes/imageRoutes');
 
 app.use('/api/properties', propertyRoutes);
 app.use('/api/projects', projectRoutes);
 app.use('/api/agents', agentRoutes);
 app.use('/api/partners', partnerRoutes);
 app.use('/api/rented', rentedRoutes);
+app.use('/api', imageRoutes);
 app.use('/fontawesome-free-6.6.0-web', express.static(path.join(__dirname, 'fontawesome-free-6.6.0-web')));
 
 app.get('/api/health', (req, res) => {

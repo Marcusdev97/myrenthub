@@ -1,0 +1,83 @@
+/* 基本的样式重置 */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, sans-serif;
+}
+
+/* 设置背景颜色和中心布局 */
+body {
+    background-color: #f0f2f5;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+/* 登录容器 */
+.login-container {
+    width: 100%;
+    max-width: 400px;
+    padding: 20px;
+    background-color: #fff;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    border-radius: 8px;
+}
+
+/* 登录标题 */
+.login-box h2 {
+    text-align: center;
+    margin-bottom: 20px;
+    color: #333;
+}
+
+/* 表单组 */
+.form-group {
+    margin-bottom: 15px;
+}
+
+/* 输入框 */
+input[type="text"],
+input[type="password"] {
+    width: 100%;
+    padding: 10px;
+    margin-top: 5px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+/* 登录按钮 */
+.login-button {
+    width: 100%;
+    padding: 10px;
+    background-color: #007bff;
+    border: none;
+    border-radius: 4px;
+    color: #fff;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+/* 按钮悬停效果 */
+.login-button:hover {
+    background-color: #0056b3;
+}
+
+/* 错误信息 */
+.error-message {
+    color: red;
+    text-align: center;
+    margin-top: 10px;
+}
+
+/* 页脚样式 */
+footer {
+    position: absolute;
+    bottom: 20px;
+    width: 100%;
+    text-align: center;
+    color: #666;
+    font-size: 14px;
+}

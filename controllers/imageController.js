@@ -1,3 +1,5 @@
+const db = require('../config/db');
+
 const path = require('path');
 const fs = require('fs');
 const ImageModel = require('../models/imageModels');

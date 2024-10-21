@@ -1,0 +1,6 @@
+// 边框圆角的 mixin
+@mixin border-radius($radius) {
+    border-radius: $radius;
+    -webkit-border-radius: $radius;
+    -moz-border-radius: $radius;
+}

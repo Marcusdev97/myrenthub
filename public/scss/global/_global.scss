@@ -1,0 +1,12 @@
+// global/_global.scss
+
+@use 'variables' as *;
+
+// 全局样式
+body {
+    font-family: Arial, sans-serif;
+    background-color: $background-color;
+    color: $text-color;
+    margin: 0;
+    padding: 0;
+}

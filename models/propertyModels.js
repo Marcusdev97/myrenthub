@@ -34,15 +34,28 @@ const PropertyModel = {
     // 确保 images 是数组
     const imageArray = Array.isArray(images) ? images : [];
 
-    const { title, availableDate, sqm, rooms, bathrooms, location, name, price, tags, description, rented, sources } = newProperty;
-
-    // 插入属性数据到数据库
+    const valuesArray = [
+      title,
+      availableDate,
+      sqm,
+      rooms,
+      bathrooms,
+      location,
+      name,
+      price,
+      tags,
+      description,
+      rented ? 1 : 0,  
+      sources || null,
+      agent || null 
+    ];
+  
     const sql = `
         INSERT INTO properties 
-        (title, availableDate, sqm, rooms, bathrooms, location, name, price, tags, description, rented, sources)
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        (title, availableDate, sqm, rooms, bathrooms, location, name, price, tags, description, rented, sources, agent)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     `;
-    const [result] = await db.query(sql, [title, availableDate, sqm, rooms, bathrooms, location, name, price, tags, description, rented, sources || null]);
+    const [result] = await db.query(sql, valuesArray);
 
     const propertyId = result.insertId;
 

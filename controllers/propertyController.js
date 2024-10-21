@@ -17,6 +17,7 @@ exports.getAllProperties = async (req, res) => {
     }
 };
 
+
 // 获取指定 ID 的属性
 exports.getPropertyById = async (req, res) => {
     const { id } = req.params;
@@ -35,17 +36,18 @@ exports.getPropertyById = async (req, res) => {
 
 // 创建一个新属性
 exports.createProperty = async (req, res) => {
-    const { title, availableDate, sqm, rooms, bathrooms, location, name, price, tags, description, sources } = req.body;
+    const { title, availableDate, sqm, rooms, bathrooms, location, name, price, tags, description, sources, agent } = req.body;
     const rented = false;
 
     // 确保 tags 和 sources 有值
     const formattedTags = tags ? tags.split(';').map(tag => tag.trim()).join(';') : '';
-    const formattedSources = sources ? JSON.stringify(sources) : '';
+    const formattedSources = sources ? sources : null;
 
     const newProperty = { 
         title, availableDate, sqm, rooms, bathrooms, location, name, price, 
         tags: formattedTags, 
-        description, rented, sources: formattedSources
+        description, rented, sources: formattedSources,
+        agent: agent || null
     };
 
     try {

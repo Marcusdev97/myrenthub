@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="/css/admin.css">
+  <link rel="stylesheet" href="../../fontawesome-free-6.6.0-web/css/all.min.css">
+  <title>Dashboard</title>
+</head>
+<body>
+  <div class="container">
+    <div class="sidebar" id="sidebar">
+        <ul class="menu">
+            <li id="menu-icon">
+                <i class="fa-solid fa-bars"></i> <span class="menu-text">Admin Menu</span>
+            </li>
+            <li><a href="index.html"><i class="fas fa-home"></i> <span class="menu-text">Home</span></a></li>
+            <li><a href="add_property.html"><i class="fas fa-plus"></i> <span class="menu-text">Add Property</span></a></li>
+            <li><a href="edit_property.html"><i class="fas fa-edit"></i> <span class="menu-text">Edit Property</span></a></li>
+            <li><a href="rented_property.html"><i class="fas fa-house-user"></i> <span class="menu-text">Rented Property</span></a></li>
+        </ul>
+    </div>
+    <div class="main-content">
+        <header>
+            <h1>Dashboard</h1>
+        </header>
+        <div class="dashboard">
+            <div class="dashboard-item">
+                <i class="fas fa-user dashboard-icon"></i>
+                <h3>Total Unit Rented</h3>
+                <p id="totalRentedUnits">Loading...</p> <!-- Dynamic content will be inserted here -->
+            </div>
+            <div class="dashboard-item">
+                <i class="fas fa-check dashboard-icon"></i>
+                <h3>Upcoming Check-ins</h3>
+                <ul id="upcomingCheckIns">Loading...</ul> <!-- Dynamic content will be inserted here -->
+            </div>
+            <div class="dashboard-item">
+                <i class="fas fa-chart-line dashboard-icon"></i>
+                <h3>Total Commissions</h3>
+                <p>Metric XYZ</p> <!-- Placeholder for future data -->
+            </div>
+        </div>
+
+        <!-- New section for available units -->
+        <div class="dashboard available-units-dashboard">
+            <div class="dashboard-item available-units-item">
+                <div class="available-units-header">
+                    <i class="fas fa-house-user dashboard-icon"></i>
+                    <h3>Available Units</h3>
+                </div>
+                <table id="availableUnitsTable">
+                    <thead>
+                        <tr>
+                            <th>Property Title</th>
+                            <th>Available Move In</th>
+                            <th>Source</th>
+                            <th>Asking Price</th>
+                        </tr>
+                    </thead>
+                    <tbody id="availableUnits">
+                        <tr id="loadingRow">
+                          <td colspan="4">Loading...</td>
+                        </tr>
+                      </tbody>
+                    </table>
+            </div>
+        </div>
+
+
+
+    </div>
+</div>
+
+  <script src="/js/admin.js"></script>
+</body>
+</html>

@@ -1,4 +1,4 @@
 // global/index.scss
-
-@forward 'variables';
-@forward 'global';
+@forward 'variables'; // 导出变量
+@forward 'global'; // 任何全局样式
+@forward 'mixins'; // 导出 mixins

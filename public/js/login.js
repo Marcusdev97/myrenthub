@@ -21,13 +21,13 @@ document.getElementById('loginForm').addEventListener('submit', async (e) => {
             throw new Error(error.message || 'Login failed');
         }
 
-        // Trigger slide-out animation on successful login
+        // 登录成功，添加 `slide-out` 类触发动画
         loginBox.classList.add('slide-out');
 
-        // Redirect to dashboard after the animation completes
+        // 延迟重定向，时间与动画持续时间一致
         setTimeout(() => {
             window.location.href = '/dashboard.html';
-        }, 500); // Duration should match the animation duration in CSS
+        }, 500); // 0.5秒，与CSS中的动画持续时间一致
 
     } catch (error) {
         loginError.textContent = error.message;

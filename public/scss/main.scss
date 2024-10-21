@@ -1,4 +1,4 @@
 // main.scss
-@use 'global/index' as *;
+@use 'global/index' as *; // 确保包含了变量文件的导入
 @use 'pages/_login';
 @use 'pages/_index';

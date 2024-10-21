@@ -1,6 +1,44 @@
+@use 'variables' as *; // Use the variables directly
+
 // 边框圆角的 mixin
 @mixin border-radius($radius) {
     border-radius: $radius;
     -webkit-border-radius: $radius;
     -moz-border-radius: $radius;
+}
+@mixin responsive-adjustments {
+    @media (max-width: 1024px) {
+        // 必须在样式规则内声明样式
+        .login-box {
+            box-shadow: none;
+            border-radius :0 !important;
+            border: 0;
+            background: $forth-color;
+            padding: 20px; // 可选：减少 padding 以适应较小的屏幕
+        }
+    }
+}
+
+
+@mixin respond-to($breakpoint) {
+    @if $breakpoint == small {
+        @media (max-width: $breakpoint-small) {
+            @content;
+        }
+    } @else if $breakpoint == medium {
+        @media (max-width: $breakpoint-medium) {
+            @content;
+        }
+    } @else if $breakpoint == large {
+        @media (max-width: $breakpoint-large) {
+            @content;
+        }
+    }
+}
+
+// _mixins.scss
+@mixin for-mobile-and-tablet {
+    @media (max-width: 1024px) {
+        @content;
+    }
 }

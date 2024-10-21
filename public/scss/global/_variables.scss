@@ -1,6 +1,6 @@
-// global/_variables.scss
+// _variables.scss
 
-// 主题颜色
+// 颜色变量
 $primary-color: #001F3F;
 $secondary-color: #3A6D8C;
 $third-color: #6A9AB0;
@@ -11,3 +11,18 @@ $placeholder-color: #bbb;
 $error-color: #ff4f4f;
 $input-bg-color: rgba(0, 0, 0, 0.05);
 $box-shadow-color: rgba(31, 38, 135, 0.37);
+
+// 间距变量
+$padding-small: 8px;
+$padding-medium: 16px;
+$padding-large: 24px;
+
+// 字体大小变量
+$font-size-small: 12px;
+$font-size-medium: 16px;
+$font-size-large: 20px;
+
+// 媒体查询断点
+$breakpoint-small: 600px;
+$breakpoint-medium: 900px;
+$breakpoint-large: 1200px;

@@ -1,3 +1,5 @@
+import { createMenubar } from '/js/components/menubar.js';
+
 document.addEventListener('DOMContentLoaded', () => {
   const sourcesSelect = document.getElementById('sources');
   const agentSection = document.getElementById('agentSection');
@@ -325,4 +327,5 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 
+  createMenubar();
 });

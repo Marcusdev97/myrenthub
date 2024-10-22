@@ -1,3 +1,5 @@
+import { createMenubar } from '/js/components/menubar.js';
+
 document.addEventListener('DOMContentLoaded', () => {
   // Function to load properties
   const loadProperties = async () => {
@@ -75,10 +77,14 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   };
 
-  document.getElementById('menu-icon').addEventListener('click', function() {
-    document.getElementById('sidebar').classList.toggle('collapsed');
-  });
+  const menuIcon = document.getElementById('menu-icon');
+  if (menuIcon) {
+      menuIcon.addEventListener('click', function() {
+          document.getElementById('sidebar').classList.toggle('collapsed');
+      });
+  }
 
-  // Initialize the properties
+  // Initialize the properties & Menubar functions
   loadProperties();
+  createMenubar();
 });

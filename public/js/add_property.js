@@ -1,9 +1,13 @@
+import { createMenubar } from '/js/components/menubar.js';
+
 document.addEventListener('DOMContentLoaded', async () => {
     const sourcesSelect = document.getElementById('sources');
     const uploadForm = document.getElementById('uploadForm');
     const bufferingIndicator = document.getElementById('bufferingIndicator');
     const uploadButton = document.getElementById('uploadButton');
     const requiredInputs = uploadForm ? Array.from(uploadForm.querySelectorAll('input[required], select[required]')) : [];
+
+    let partnersData = [];
 
     // Enable/Disable upload button based on form inputs
     if (requiredInputs) {
@@ -80,5 +84,5 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
     }
 
-    document.getElementById('menu-icon').addEventListener('click', () => { document.getElementById('sidebar').classList.toggle('collapsed'); });
+    createMenubar();
 });

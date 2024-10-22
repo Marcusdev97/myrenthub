@@ -1,3 +1,5 @@
+import { createMenubar } from '/js/components/menubar.js';
+
 document.addEventListener('DOMContentLoaded', () => {
 
     const modal = document.getElementById('editModal');
@@ -223,4 +225,5 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Initial load of rented properties
     loadRentedProperties();
+    createMenubar();
 });
